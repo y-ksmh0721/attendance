@@ -1,0 +1,126 @@
+/* 基本スタイル */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+}
+
+.container {
+    margin-top: 50px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    margin: 10px;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+table.table-bordered {
+    width: 100%;
+    max-width: 800px; /* 最大幅を800pxに設定 */
+    margin: 0 auto 20px; /* 中央揃え */
+    border-collapse: collapse;
+}
+
+table.table-bordered th, table.table-bordered td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+table.table-bordered th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.d-flex {
+    display: flex;
+    justify-content: flex-start;
+    justify-content: center;  /* ボタンを中央揃え */
+    gap: 10px;  /* ボタン間のスペースを調整 */
+}
+
+.d-flex a, .d-flex button {
+    font-size: 1rem;
+    padding: 8px 15px;
+}
+
+.d-flex a {
+    background-color: #6c757d;
+    color: white;
+    text-decoration: none;
+}
+
+.d-flex a:hover {
+    background-color: #5a6268;
+}
+
+.d-flex button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+.d-flex button:hover {
+    background-color: #0056b3;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    /* 中サイズのスクリーン（タブレットなど） */
+    .btn {
+        padding: 12px 25px;
+        font-size: 18px;
+    }
+
+    header {
+        font-size: 18px;
+        padding: 15px;
+    }
+
+    .container {
+        margin-top: 30px;
+    }
+
+}
+
+@media (max-width: 480px) {
+    /* 小サイズのスクリーン（スマートフォンなど） */
+    body {
+        font-size: 14px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 15px;
+        font-size: 20px;
+    }
+
+    header {
+        font-size: 20px;
+        padding: 20px;
+    }
+
+    .container {
+        margin-top: 20px;
+    }
+}
+
