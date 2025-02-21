@@ -11,7 +11,7 @@ class WorkController extends Controller
     public function index(Request $request){
         $works = Work::with('cliant')->orderByDesc('created_at')->get();
         $cliants = Cliant::all();
-        
+
 
         return view('works.index', compact('works','cliants'));
     }
@@ -59,5 +59,15 @@ class WorkController extends Controller
         $work->save();
 
         return redirect()->back()->with('success', 'ステータスを更新しました。');
+    }
+
+    public function destroy($id)
+    {
+        // cliantsテーブルから指定のIDのレコード1件を取得
+        $work = Work::find($id);
+        // レコードを削除
+        $work->delete();
+        // 削除したら一覧画面にリダイレクト
+        return redirect()->route('works.index');
     }
 }

@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\WorkController;
+use App\Http\Controllers\CliantController;
 use App\Http\Controllers\ManagementController;
 use App\Http\Controllers\DashboardController;
 
@@ -29,6 +30,8 @@ Route::middleware('auth')->group(function () {
 Route::get('/management', [ManagementController::class, 'index'])->name('management');
 Route::post('/management/confirm', [ManagementController::class, 'confirm'])->name('management.confirm');
 Route::post('/management/complete', [ManagementController::class, 'complete'])->name('management.complete');
+Route::get('/cliant', [CliantController::class, 'list'])->name('cliant.list');
+Route::DELETE('/cliant/destroy{id}', [CliantController::class, 'destroy'])->name('cliant.destroy');
 
 // 出勤情報画面
 Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
@@ -41,6 +44,7 @@ Route::post('/works/confirm', [WorkController::class, 'confirm'])->name('works.c
 Route::post('/works/complete', [WorkController::class, 'complete'])->name('works.complete');
 Route::post('/works/{id}/toggle-status', [WorkController::class, 'toggleStatus'])
     ->name('works.toggleStatus');
+Route::DELETE('/works/destroy{id}', [WorkController::class, 'destroy'])->name('works.destroy');
 
 
 require __DIR__.'/auth.php';
