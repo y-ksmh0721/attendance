@@ -102,6 +102,33 @@ table tr:hover {
     background-color: #0056b3;
 }
 
+/* フルスクリーン表示用のテーブル */
+.full-width-table {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+.full-width-table th, .full-width-table td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.full-width-table th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+.full-width-table tr:hover {
+    background-color: #f1f1f1;
+}
+
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
     .btn {

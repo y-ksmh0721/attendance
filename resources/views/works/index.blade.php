@@ -43,14 +43,17 @@
         <thead>
             <tr>
                 <th>現場名</th>
+                <th>客先名</th>
                 <th>アクティブ</th>
                 <th>削除</th>
+
             </tr>
         </thead>
         <tbody>
             @foreach ($works as $work)
             <tr>
                 <td>{{ $work->name }}</td>
+                <td>{{$work->cliant->cliant_name}}</td>
                 <td>
                     <form action="{{ route('works.toggleStatus', $work->id) }}" method="POST">
                         @csrf

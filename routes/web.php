@@ -30,11 +30,16 @@ Route::middleware('auth')->group(function () {
 Route::get('/management', [ManagementController::class, 'index'])->name('management');
 Route::post('/management/confirm', [ManagementController::class, 'confirm'])->name('management.confirm');
 Route::post('/management/complete', [ManagementController::class, 'complete'])->name('management.complete');
+Route::get('/management/edit/{id}', [ManagementController::class, 'edit'])->name('management.edit');
+Route::post('/management/update/{id}', [ManagementController::class, 'update'])->name('management.update');
+
+//客先管理画面
 Route::get('/cliant', [CliantController::class, 'list'])->name('cliant.list');
 Route::DELETE('/cliant/destroy{id}', [CliantController::class, 'destroy'])->name('cliant.destroy');
 
 // 出勤情報画面
 Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendance.list');
 Route::post('/attendance/confirm', [AttendanceController::class, 'confirm'])->name('attendance.confirm');
 Route::post('/attendance/complete', [AttendanceController::class, 'complete'])->name('attendance.complete');
 

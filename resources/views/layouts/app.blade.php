@@ -10,9 +10,10 @@
     <header>
         <h1>Y's TEC</h1>
         <a class="hd-menu" href="{{route('dashboard')}}">出勤管理</a>
-        <a class="hd-menu" href="{{route('management')}}">管理画面</a>
-        <a class="hd-menu" href="{{route('works.index')}}">現場登録画面</a>
-        <a class="hd-menu" href="{{route('cliant.list')}}">客先一覧</a>
+        <a class="hd-menu" href="{{route('attendance.list')}}">出勤一覧</a>
+        <a class="hd-menu" href="{{route('management')}}">出勤管理</a>
+        <a class="hd-menu" href="{{route('works.index')}}">現場管理</a>
+        <a class="hd-menu" href="{{route('cliant.list')}}">客先管理</a>
     </header>
 
     <main>

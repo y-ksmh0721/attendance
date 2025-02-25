@@ -12,4 +12,9 @@ class Attendance extends Model
 
     protected $table = 'attendances';
     protected $fillable = ['id','date','user_id', 'morning_site', 'afternoon_site', 'overtime','created_at','updated_at'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

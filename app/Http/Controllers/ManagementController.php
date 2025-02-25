@@ -4,12 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cliant;
+use App\Models\Attendance;
+use App\Models\Work;
 
 class ManagementController extends Controller
 {
-    public function index(Request $request){
-        
-        return view('management.management',);
+    public function index(){
+        $attendance = Attendance::with('user')
+        ->orderByDesc('created_at')
+        ->get();
+        // dd($attendance);
+
+        return view('management.management',[
+            'attendance'=>$attendance
+        ]);
     }
 
     public function confirm(Request $request){
@@ -30,6 +38,26 @@ class ManagementController extends Controller
         return view('management.complete', ['cliant' => $cliant]);
     }
 
+    public function edit($id){
+        $attendance = Attendance::find($id);
+        $works = Work::all();
+        return view('management.edit',compact('attendance','works'));
+    }
+
+    public function update(Request $request, Attendance $attendance){
+        //更新処理
+
+        $result = $attendance->fill([
+            'date' => $request->date,
+            'morning_site' => $request->morning_site,
+            'afternoon_site' => $request->afternoon_site,
+            'user_id'=> $request->user_id,
+            'overtime' => $request->overtime
+        ])->save();
+
+        return $result;
+    }
+
     public function destroy($id)
     {
         // Booksテーブルから指定のIDのレコード1件を取得
@@ -38,5 +66,8 @@ class ManagementController extends Controller
         $cliant->delete();
         // 削除したら一覧画面にリダイレクト
         return redirect()->route('management.management');
+
     }
+
+
 }

@@ -8,8 +8,6 @@ use App\Models\Attendance;
 
 class AttendanceController extends Controller
 {
-
-
     public function confirm(Request $request){
         $attendance = (object) $request->all();
         return view('attendance.confirm',['attendance' => $attendance]);
@@ -30,5 +28,19 @@ class AttendanceController extends Controller
 
 
         return view('attendance.complete',compact('attendance'));
+    }
+
+    public function list(Request $request){
+        $user = $request->user();
+
+        $attendance = Attendance::select('date',Attendance::raw('DAYOFWEEK(date) as dow'),'morning_site','afternoon_site')
+                      ->where('user_id',$user->id)
+                      ->orderby('date','desc')
+                      ->get();
+
+        return view('attendance.list',[
+            'user'=>$user,
+            'attendance'=>$attendance
+        ]);
     }
 }
