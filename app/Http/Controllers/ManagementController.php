@@ -47,7 +47,12 @@ class ManagementController extends Controller
     public function update(Request $request, Attendance $attendance){
         //更新処理
 
-        $result = $attendance->fill([
+        $attendance = Attendance::find($request->id); // id で検索
+        if (!$attendance) {
+            return response()->json(['error' => 'Record not found'], 404);
+        }
+
+        $attendance->fill([
             'date' => $request->date,
             'morning_site' => $request->morning_site,
             'afternoon_site' => $request->afternoon_site,
@@ -55,7 +60,7 @@ class ManagementController extends Controller
             'overtime' => $request->overtime
         ])->save();
 
-        return $result;
+        return response()->json(['message' => 'Update Complete']);
     }
 
     public function destroy($id)

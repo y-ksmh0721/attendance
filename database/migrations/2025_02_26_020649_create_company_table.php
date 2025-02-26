@@ -11,15 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('works', function (Blueprint $table) {
-            $table->unsignedBigInteger('cliant_id')->after('status');
+        Schema::create('company', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::table('works', function (Blueprint $table) {
-            $table->dropColumn('cliant_id');
-        });
+        Schema::dropIfExists('company');
     }
 };

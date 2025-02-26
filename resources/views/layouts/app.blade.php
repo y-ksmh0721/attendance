@@ -12,6 +12,8 @@
         <a class="hd-menu" href="{{route('dashboard')}}">出勤管理</a>
         <a class="hd-menu" href="{{route('attendance.list')}}">出勤一覧</a>
         <a class="hd-menu" href="{{route('management')}}">出勤管理</a>
+        <a class="hd-menu" href="{{route('craft.index')}}">職人管理</a>
+        <a class="hd-menu" href="{{route('company.list')}}">所属管理</a>
         <a class="hd-menu" href="{{route('works.index')}}">現場管理</a>
         <a class="hd-menu" href="{{route('cliant.list')}}">客先管理</a>
     </header>

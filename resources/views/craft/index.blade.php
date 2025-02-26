@@ -4,31 +4,31 @@
 
 @section('content')
 <div class="container">
-    <h2 class="mb-4">現場名登録画面</h2>
+    <h2 class="mb-4">職人登録画面</h2>
 
     <!-- 現場登録フォーム -->
-    <form action="{{route('works.confirm')}}" method="post">
+    <form action="{{route('craft.confirm')}}" method="post">
         @csrf
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th><label for="cliant_name" class="form-label">客先名</label></th>
-                    <th><label for="site_name" class="form-label">現場名</label></th>
+                    <th><label for="cliant_name" class="form-label">所属会社</label></th>
+                    <th><label for="site_name" class="form-label">職人名</label></th>
                     <th>決定</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>
-                        <select class="form-control" id="cliant_name" name="cliant_info" required>
+                        <select class="form-control" id="craft_name" name="company_info" required>
                             <option value="">選択してください</option>
-                            @foreach ($cliants as $cliant)
-                                <option value="{{$cliant}}">{{ $cliant['cliant_name'] }}</option>
+                            @foreach ($companys as $company)
+                                <option value="{{$company}}">{{ $company['name'] }}</option>
                             @endforeach
                         </select>
                     </td>
                     <td>
-                        <input type="text" class="form-control" id="site_name" name="site_name" value="{{ old('site_name') }}">
+                        <input type="text" class="form-control" id="craft_name" name="craft_name" value="{{ old('craft_name') }}">
                     </td>
                     <td>
                         <button type="submit" class="btn btn-primary">確認画面へ</button>
@@ -42,31 +42,33 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>現場名</th>
-                <th>客先名</th>
+                <th>職人名</th>
+                <th>所属</th>
                 <th>アクティブ</th>
                 <th>削除</th>
 
             </tr>
         </thead>
         <tbody>
-            @foreach ($works as $work)
+            @foreach ($craft as $record)
+            {{-- {{dd($craft-)}} --}}
+
             <tr>
-                <td>{{ $work->name }}</td>
-                <td>{{$work->cliant->cliant_name}}</td>
+                <td>{{ $record->name}}</td>
+                <td>{{$record->company->name}}</td>
                 <td>
-                    <form action="{{ route('works.toggleStatus', $work->id) }}" method="POST">
+                    <form action="{{ route('craft.toggleStatus', $record->id) }}" method="POST">
                         @csrf
-                        <button type="submit" class="btn {{ $work->status === 'active' ? 'btn-success' : 'btn-secondary' }}">
-                            {{ $work->status === 'active' ? 'アクティブ' : '非アクティブ' }}
+                        <button type="submit" class="btn {{ $record->status === 'active' ? 'btn-success' : 'btn-secondary' }}">
+                            {{ $record->status === 'active' ? 'アクティブ' : '非アクティブ' }}
                         </button>
                     </form>
                 </td>
                 <td>
-                    <form action="{{ route('works.destroy', ['id' => $work['id']]) }}" method="POST">
+                    <form action="{{ route('craft.destroy', ['id' => $record->id]) }}" method="POST">
                         @csrf
                         <input type="hidden" name="_method" value="DELETE">
-                        <button type="button" class="btn btn-danger delete-btn" data-id="{{ $work['id'] }}">削除</button>
+                        <button type="button" class="btn btn-danger delete-btn" data-id="{{ $record->id }}">削除</button>
                     </form>
                 </td>
             </tr>
@@ -102,5 +104,6 @@
         });
     });
     </script>
+
 
 @endsection

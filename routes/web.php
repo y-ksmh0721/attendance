@@ -6,6 +6,8 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\WorkController;
 use App\Http\Controllers\CliantController;
 use App\Http\Controllers\ManagementController;
+use App\Http\Controllers\CraftController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
 
 
@@ -50,6 +52,20 @@ Route::post('/works/complete', [WorkController::class, 'complete'])->name('works
 Route::post('/works/{id}/toggle-status', [WorkController::class, 'toggleStatus'])
     ->name('works.toggleStatus');
 Route::DELETE('/works/destroy{id}', [WorkController::class, 'destroy'])->name('works.destroy');
+
+//職人管理画面
+Route::get('/craft', [CraftController::class, 'index'])->name('craft.index');
+Route::post('/craft/confirm', [CraftController::class, 'confirm'])->name('craft.confirm');
+Route::post('/craft/complete', [CraftController::class, 'complete'])->name('craft.complete');
+Route::post('/craft/{id}/toggle-status', [CraftController::class, 'toggleStatus'])
+    ->name('craft.toggleStatus');
+Route::DELETE('/craft/destroy{id}', [CraftController::class, 'destroy'])->name('craft.destroy');
+
+//所属管理画面
+Route::get('/company', [CompanyController::class, 'list'])->name('company.list');
+Route::post('/company/confirm', [CompanyController::class, 'confirm'])->name('company.confirm');
+Route::post('/company/complete', [CompanyController::class, 'complete'])->name('company.complete');
+Route::DELETE('/company/destroy{id}', [CompanyController::class, 'destroy'])->name('company.destroy');
 
 
 require __DIR__.'/auth.php';
