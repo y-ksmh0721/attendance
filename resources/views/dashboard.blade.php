@@ -16,6 +16,18 @@
             </div>
             <!-- 午前の現場 -->
             <div class="mb-3">
+                <label for="name" class="form-label">職人名</label>
+                <select class="form-control" id="name" name="name" required>
+                    <option value="">選択してください</option>
+                    @foreach ($crafts as $craft)
+                    @if ($craft->status === 'active')
+                        <option value="{{ $craft->name }}">{{ $craft->name }}</option>
+                    @endif
+               @endforeach
+                </select>
+            </div>
+            <!-- 午前の現場 -->
+            <div class="mb-3">
                 <label for="morning_site" class="form-label">午前の現場</label>
                 <select class="form-control" id="morning_site" name="morning_site" required>
                     <option value="">選択してください</option>

@@ -12,23 +12,29 @@
         <table class="table table-bordered">
             <tr>
                 <th>出勤日</th>
-                <td>{{ $attendance->date }}</td>
-                <input type="hidden" name="date" value="{{ $attendance->date }}">
+                <td>{{ $attendance['date'] }}</td>
+                <input type="hidden" name="date" value="{{ $attendance['date'] }}">
             </tr>
             <tr>
                 <th>午前の現場</th>
-                <td>{{ $attendance->morning_site }}</td>
-                <input type="hidden" name="morning_site" value="{{ $attendance->morning_site }}">
+                <td>{{ $attendance['name']}}</td>
+                <input type="hidden" name="name" value="{{ $attendance['name'] }}">
+            </tr>
+
+            <tr>
+                <th>午前の現場</th>
+                <td>{{ $attendance['morning_site'] }}</td>
+                <input type="hidden" name="morning_site" value="{{ $attendance['morning_site'] }}">
             </tr>
             <tr>
                 <th>午後の現場</th>
-                <td>{{ $attendance->afternoon_site }}</td>
-                <input type="hidden" name="afternoon_site" value="{{ $attendance->afternoon_site }}">
+                <td>{{ $attendance['afternoon_site'] }}</td>
+                <input type="hidden" name="afternoon_site" value="{{ $attendance['afternoon_site'] }}">
             </tr>
             <tr>
                 <th>残業時間</th>
-                <td>{{ $attendance->overtime }}</td>
-                <input type="hidden" name="overtime" value="{{ $attendance->overtime }}">
+                <td>{{ $attendance['overtime'] }}</td>
+                <input type="hidden" name="overtime" value="{{ $attendance['overtime'] }}">
             </tr>
         </table>
 

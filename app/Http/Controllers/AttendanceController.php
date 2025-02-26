@@ -9,20 +9,20 @@ use App\Models\Attendance;
 class AttendanceController extends Controller
 {
     public function confirm(Request $request){
-        $attendance = (object) $request->all();
+        // $attendance = (object) $request->all();
+        $attendance = $request->all();
         return view('attendance.confirm',['attendance' => $attendance]);
     }
 
     public function complete(Request $request){
         $attendance = $request->all();
-        $user = $request->user();
 
         $newAtt = new Attendance();
-        $newAtt->date = $request->date;
-        $newAtt->user_id = $user->id;
-        $newAtt->morning_site = $request->morning_site;
-        $newAtt->afternoon_site = $request->afternoon_site;
-        $newAtt->overtime = $request->overtime;
+        $newAtt->date = $attendance['date'];
+        $newAtt->name = $attendance['name'];
+        $newAtt->morning_site = $attendance['morning_site'];
+        $newAtt->afternoon_site = $attendance['afternoon_site'];
+        $newAtt->overtime = $attendance['overtime'];
         $newAtt->save();
 
 
@@ -32,9 +32,9 @@ class AttendanceController extends Controller
 
     public function list(Request $request){
         $user = $request->user();
+        $userId = $user['id'];
 
-        $attendance = Attendance::select('date',Attendance::raw('DAYOFWEEK(date) as dow'),'morning_site','afternoon_site')
-                      ->where('user_id',$user->id)
+        $attendance = Attendance::select('date',Attendance::raw('DAYOFWEEK(date) as dow'),'name','morning_site','afternoon_site','overtime')
                       ->orderby('date','desc')
                       ->get();
 
