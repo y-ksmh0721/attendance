@@ -6,6 +6,6 @@
 
 送信完了しました
 <br>
-<a href="{{ route('management.management') }}">現場管理画面へ</a>
+<a href="{{ route('cliant.list') }}">リストへ</a>
 
 @endsection

@@ -53,7 +53,13 @@
             @foreach ($works as $work)
             <tr>
                 <td>{{ $work->name }}</td>
-                <td>{{$work->cliant->cliant_name}}</td>
+                <td>
+                    @if($work->cliant)
+                        {{ $work->cliant->cliant_name }}
+                    @else
+                        クライアント情報なし
+                    @endif
+                </td>
                 <td>
                     <form action="{{ route('works.toggleStatus', $work->id) }}" method="POST">
                         @csrf

@@ -5,26 +5,20 @@
 @section('content')
 
 <table class="full-width-table">
-    <tr>
-        <th>名前</th>
-        <th>日付</th>
-        <th>午前の現場</th>
-        <th>午後の現場</th>
-        <th>残業</th>
-        <th>編集</th>
-    </tr>
-    @foreach ($attendance as $record)
-    <tr>
-        <td>{{$record->user->name}}</td>
-        <td>{{$record->date}}</td>
-        <td>{{$record->morning_site}}</td>
-        <td>{{$record->afternoon_site}}</td>
-        <td>{{$record->overtime}}</td>
-        <td><a href="{{route('management.edit',['id'=>$record->id])}}">編集</a></td>
-    </tr>
-    @endforeach
-</table>
-
+    <table>
+        <tr>
+            <th>人事管理</th>
+            <th>現場管理</th>
+        </tr>
+        <tr>
+            <td><a href="{{route('company.list')}}">所属登録</a></td>
+            <td><a href="{{route('cliant.list')}}">客先登録</a></td>
+        </tr>
+        <tr>
+            <td><a href="{{route('craft.index')}}">職人登録</a></td>
+            <td><a href="{{route('works.index')}}">現場登録</a></td>
+        </tr>
+    </table>
 
 
 

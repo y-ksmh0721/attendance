@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Attendance;
+use Carbon\Carbon;
+use App\Models\Work;
+
 // use Illuminate\Http\AttendanceRequest;
 
 class AttendanceController extends Controller
@@ -34,13 +37,40 @@ class AttendanceController extends Controller
         $user = $request->user();
         $userId = $user['id'];
 
-        $attendance = Attendance::select('date',Attendance::raw('DAYOFWEEK(date) as dow'),'name','morning_site','afternoon_site','overtime')
-                      ->orderby('date','desc')
-                      ->get();
+        //リレーションにて結合したcraftとcompanyをattendanceテーブルと一緒に持ってくる
+        $attendances = Attendance::with(['craft.company'])->get();
+        //attendanceテーブルの日付を曜日に変換する
+        foreach($attendances as $attendance){
+            $attendance->day_of_week = Carbon::parse($attendance->date)->locale('ja')->isoFormat('ddd');
+        }
 
-        return view('attendance.list',[
-            'user'=>$user,
-            'attendance'=>$attendance
-        ]);
+        return view('attendance.list',compact('attendances','user'));
+    }
+
+    public function edit($id){
+        // `works` テーブルのデータを取得
+        $works = Work::all();
+         //リレーションにて結合したcraftとcompanyをattendanceテーブルと一緒に持ってくる
+         $attendance = Attendance::with(['craft.company'])->findOrFail($id);
+
+        return view('attendance.edit',compact('attendance','works'));
+    }
+
+    public function update(Request $request, Attendance $attendance){
+        //更新処理
+        $attendance = Attendance::find($request->id); // id で検索
+        if (!$attendance) {
+            return response()->json(['error' => 'Record not found'], 404);
+        }
+
+        $attendance->fill([
+            'date' => $request->date,
+            'name' => $request->name,
+            'morning_site' => $request->morning_site,
+            'afternoon_site' => $request->afternoon_site,
+            'overtime' => $request->overtime
+        ])->save();
+
+        return redirect()->route('attendance.list')->with('message', 'Update Complete');
     }
 }

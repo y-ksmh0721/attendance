@@ -12,6 +12,23 @@ class CliantController extends Controller
         return view('cliant.list', ['cliants'=>$cliants ]);
     }
 
+    public function confirm(Request $request){
+        $cliant = (object) $request->all();
+
+        return view('cliant.confirm', ['cliant' => $cliant]);
+    }
+
+    public function complete(Request $request){
+        $cliant = (object) $request->all();
+
+        $cliants = new Cliant();
+        $cliants->cliant_name = $cliant->cliant_name;
+        $cliants->save();
+
+        return redirect()->route('cliant.list');
+        // return view('cliant.complete', ['cliant' => $cliant]);
+    }
+
     public function destroy($id)
     {
         // cliantsテーブルから指定のIDのレコード1件を取得

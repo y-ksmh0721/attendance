@@ -11,6 +11,7 @@
             <th>日付</th>
             <th>曜日</th>
             <th>名前</th>
+            <th>所属</th>
             <th>午前の現場</th>
             <th>午後の現場</th>
             <th>残業</th>
@@ -18,22 +19,23 @@
             <th>編集</th>
             @endif
         </tr>
-        @foreach($attendance as $record)
+        @foreach($attendances as $attendance)
         <tr>
-            <td>{{ $record->date }}</td>
+            <td>{{ $attendance->date }}</td>
+            <td>{{ $attendance->day_of_week}}</td>
+            <td>{{ $attendance->name }}</td>
             <td>
-                @php
-                    $daysOfWeek = ['日', '月', '火', '水', '木', '金', '土'];
-                    $dayOfWeek = $record->dow - 1;
-                @endphp
-                {{ $daysOfWeek[$dayOfWeek] }}
+                @if($attendance->craft && $attendance->craft->company)
+                    {{ $attendance->craft->company->name }}
+                @else
+                     所属情報なし
+                @endif
             </td>
-            <td>{{ $record->name }}</td>
-            <td>{{ $record->morning_site }}</td>
-            <td>{{ $record->afternoon_site }}</td>
-            <td>{{ substr($record->overtime, 0, 5) }}</td>
+            <td>{{ $attendance->morning_site }}</td>
+            <td>{{ $attendance->afternoon_site }}</td>
+            <td>{{ substr($attendance->overtime, 0, 5) }}</td>
             @if(in_array($user['id'], [1, 2]))
-            <td><a href="#">編集</a></td>
+            <td><a href="{{route('attendance.edit',['id' => $attendance->id])}}">編集</a></td>
             @endif
         </tr>
         @endforeach

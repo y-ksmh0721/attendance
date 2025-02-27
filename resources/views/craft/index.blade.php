@@ -38,7 +38,7 @@
         </table>
     </form>
 
-    <h2 class="mt-5">登録現場</h2>
+    <h2 class="mt-5">登録一覧</h2>
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -55,7 +55,13 @@
 
             <tr>
                 <td>{{ $record->name}}</td>
-                <td>{{$record->company->name}}</td>
+                <td>
+                    @if($record->company)
+                        {{ $record->company->name }}
+                    @else
+                        所属情報なし
+                    @endif
+                </td>
                 <td>
                     <form action="{{ route('craft.toggleStatus', $record->id) }}" method="POST">
                         @csrf

@@ -49,11 +49,19 @@
     document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll(".delete-btn").forEach(button => {
             button.addEventListener("click", function () {
+                // 削除前にスクロール位置を保存
+                const scrollPosition = window.scrollY;
+
                 if (confirm("本当に削除しますか？")) {
+                    // 削除フォームを送信
                     this.closest("form").submit();
+
+                    // 削除後に元のスクロール位置に戻る
+                    window.scrollTo(0, scrollPosition);
                 }
             });
         });
     });
 </script>
 @endsection
+

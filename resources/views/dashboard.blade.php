@@ -61,14 +61,25 @@
             <button type="submit" class="btn btn-primary">記録する</button>
         </form>
     </div>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in") }}
-                </div>
-            </div>
-        </div>
-    </div>
+    <a href="#" id="logout-link">ログアウト</a>
+
+<script>
+document.getElementById("logout-link").addEventListener("click", function (e) {
+    e.preventDefault();
+
+    let form = document.createElement("form");
+    form.method = "POST";
+    form.action = "{{ route('logout') }}";
+
+    let csrf = document.createElement("input");
+    csrf.type = "hidden";
+    csrf.name = "_token";
+    csrf.value = "{{ csrf_token() }}";
+
+    form.appendChild(csrf);
+    document.body.appendChild(form);
+    form.submit();
+});
+</script>
     @endsection
 

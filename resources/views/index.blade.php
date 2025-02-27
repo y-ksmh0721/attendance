@@ -1,5 +1,3 @@
-
-
 @extends('layouts.app')
 
 @section('title', 'トップページ')
@@ -10,8 +8,7 @@
     <br>
     <a href="{{ route('register') }}"><button class="btn">新規登録</button></a>
     <br>
-    <a href="{{ route('management') }}"><button class="btn">現場管理画面</button></a>
-    <br>
+
     <a href="#" id="logout-link">ログアウト</a>
 
 <script>

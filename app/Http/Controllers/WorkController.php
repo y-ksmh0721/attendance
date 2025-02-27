@@ -9,11 +9,13 @@ use App\Models\Cliant;
 class WorkController extends Controller
 {
     public function index(Request $request){
-        $cliants = Cliant::all(); //ドロップダウン
+        //ドロップダウン
+        $cliants = Cliant::all();
+
         $works = Work::with('cliant')
         ->orderByDesc('created_at')
         ->get();
-
+        // dd($works);
         return view('works.index', compact('works','cliants'));
     }
 

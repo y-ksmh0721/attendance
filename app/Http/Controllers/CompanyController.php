@@ -25,7 +25,8 @@ class CompanyController extends Controller
         $company->name = $request->company_name;
         $company->save();
 
-        return view('company.complete',['company' => $company]);
+        // return view('company.complete',['company' => $company]);
+        return redirect()->route('company.list');
     }
 
     public function destroy($id)

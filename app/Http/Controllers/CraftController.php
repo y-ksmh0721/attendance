@@ -41,8 +41,7 @@ class CraftController extends Controller
         $craft->company_id = $request['company_id'];
         $craft->save();
 
-
-        return view('craft.complete',compact('craft'));
+        return redirect()->route('craft.index');
     }
 
     public function toggleStatus($id) {
