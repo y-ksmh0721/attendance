@@ -12,17 +12,17 @@
         <div class="mb-3">
             <label for="company_name" class="form-label">会社名を記入してください</label>
             <br>
-            <input type="text" name='company_name' value="">
+            <input type="text" name='company_name' value="" required>
         </div>
         <!-- 送信ボタン -->
         <button type="submit" class="btn btn-primary">記録する</button>
     </form>
 
-    <h2 class="mb-4">客先リスト</h2>
+    <h2 class="mb-4">所属会社リスト</h2>
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>所属名</th>
+                <th>会社名</th>
                 <th>削除</th>
             </tr>
         </thead>

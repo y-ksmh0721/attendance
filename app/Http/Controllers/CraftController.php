@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Craft;
 use App\Models\Company;
+use App\Http\Requests\CraftRequest;
 
 class CraftController extends Controller
 {
@@ -21,13 +22,13 @@ class CraftController extends Controller
         ]);
     }
 
-    public function confirm(Request $request) {
+    public function confirm(CraftRequest $request) {
         $craft = (object) $request->only(['craft_name']);
         $company = $request->all();
         if (isset($company['company_info'])) {
-            $company['company_info'] = json_decode($company['company_info'], true);
-        }
-
+                $company['company_info'] = json_decode($company['company_info'], true);
+            }
+            // dd($company);
         return view('craft.confirm', compact('craft', 'company'));
     }
 

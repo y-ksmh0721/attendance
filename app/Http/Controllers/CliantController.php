@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cliant;
+use App\Http\Requests\CliantRequest;
 
 class CliantController extends Controller
 {
@@ -12,7 +13,7 @@ class CliantController extends Controller
         return view('cliant.list', ['cliants'=>$cliants ]);
     }
 
-    public function confirm(Request $request){
+    public function confirm(CliantRequest $request){
         $cliant = (object) $request->all();
 
         return view('cliant.confirm', ['cliant' => $cliant]);

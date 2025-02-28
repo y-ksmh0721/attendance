@@ -12,6 +12,7 @@
         <table class="table table-bordered">
             <tr>
                 <th>顧客名</th>
+                {{-- {{dd($cliant)}} --}}
                 <td>{{ $cliant['cliant_info']['cliant_name'] }}</td>
                 <input type="hidden" name="cliant_id" value="{{ $cliant['cliant_info']['id'] }}">
                 <input type="hidden" name="cliant_name" value="{{ $cliant['cliant_info']['cliant_name'] }}">

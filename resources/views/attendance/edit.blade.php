@@ -20,33 +20,40 @@
                 <th>午前の現場</th>
                 <th>午後の現場</th>
                 <th>残業</th>
+                <th>更新</th>
             </tr>
             <tr>
                 <td>変更前</td>
                 <td>{{$attendance->morning_site}}</td>
                 <td>{{$attendance->afternoon_site}}</td>
                 <td>{{ \Carbon\Carbon::parse($attendance->overtime)->format('H:i') }}</td>
+                <td>更新してください</td>
             </tr>
             <tr>
                 <td>変更後</td>
                 <td>
+                    <!-- 午前の現場 -->
                     <select class="form-control" id="morning_site" name="morning_site" required>
-                        <option value="">選択してください</option>
-                        <option value="休み">休み</option>
+                        <option value="" disabled {{ old('morning_site') == '' ? 'selected' : '' }}>選択してください</option>
+                        <option value="休み" {{ old('morning_site') == '休み' ? 'selected' : '' }}>休み</option>
                         @foreach ($works as $work)
                             @if ($work->status === 'active')
-                                <option value="{{ $work->name }}">{{ $work->name }}</option>
+                                <option value="{{ $work->name }}" {{ old('morning_site') == $work->name ? 'selected' : '' }}>
+                                    {{ $work->name }}
+                                </option>
                             @endif
                         @endforeach
                     </select>
                 </td>
                 <td>
                     <select class="form-control" id="afternoon_site" name="afternoon_site" required>
-                        <option value="">選択してください</option>
-                        <option value="休み">休み</option>
+                        <option value="" disabled {{ old('afternoon_site') == '' ? 'selected' : '' }}>選択してください</option>
+                        <option value="休み" {{ old('afternoon_site') == '休み' ? 'selected' : '' }}>休み</option>
                         @foreach ($works as $work)
                             @if ($work->status === 'active')
-                                <option value="{{ $work->name }}">{{ $work->name }}</option>
+                                <option value="{{ $work->name }}" {{ old('afternoon_site') == $work->name ? 'selected' : '' }}>
+                                    {{ $work->name }}
+                                </option>
                             @endif
                         @endforeach
                     </select>
@@ -56,11 +63,22 @@
                         <input type="time" class="form-control" id="overtime" name="overtime" value="{{ old('overtime') }}" required>
                     </div>
                 </td>
+                <td>
+                    <button type="submit" class="btn btn-success">{{ __('更新') }}</button>
+                </td>
             </tr>
         </table>
-
-        <button type="submit" class="btn btn-success">{{ __('更新') }}</button>
     </form>
+    {{-- バリデーションエラー文 --}}
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 </div>
 @endsection
 

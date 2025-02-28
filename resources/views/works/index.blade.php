@@ -20,15 +20,18 @@
             <tbody>
                 <tr>
                     <td>
-                        <select class="form-control" id="cliant_name" name="cliant_info" required>
-                            <option value="">選択してください</option>
+                        <select class="form-control" id="cliant_info" name="cliant_info" required>
+                            <option value="" disabled {{ old('cliant_info') == '' ? 'selected' : '' }}>選択してください</option>
                             @foreach ($cliants as $cliant)
-                                <option value="{{$cliant}}">{{ $cliant['cliant_name'] }}</option>
+                                <option value="{{ $cliant }}"
+                                    {{ old('cliant_info') == $cliant['cliant_name'] ? 'selected' : '' }}>
+                                    {{ $cliant['cliant_name'] }}
+                                </option>
                             @endforeach
                         </select>
                     </td>
                     <td>
-                        <input type="text" class="form-control" id="site_name" name="site_name" value="{{ old('site_name') }}">
+                        <input type="text" class="form-control" id="site_name" name="site_name" value="{{ old('site_name') }}" required>
                     </td>
                     <td>
                         <button type="submit" class="btn btn-primary">確認画面へ</button>

@@ -6,12 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\Attendance;
 use Carbon\Carbon;
 use App\Models\Work;
+use App\Http\Requests\ValidateRequest;
+use App\Http\Requests\AttendanceRequest;
 
 // use Illuminate\Http\AttendanceRequest;
 
 class AttendanceController extends Controller
 {
-    public function confirm(Request $request){
+    public function confirm(ValidateRequest $request){
         // $attendance = (object) $request->all();
         $attendance = $request->all();
         return view('attendance.confirm',['attendance' => $attendance]);
@@ -56,7 +58,7 @@ class AttendanceController extends Controller
         return view('attendance.edit',compact('attendance','works'));
     }
 
-    public function update(Request $request, Attendance $attendance){
+    public function update(AttendanceRequest $request, Attendance $attendance){
         //更新処理
         $attendance = Attendance::find($request->id); // id で検索
         if (!$attendance) {

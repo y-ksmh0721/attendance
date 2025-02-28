@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Company;
+use App\Http\Requests\CompanyRequest;
 
 
 class CompanyController extends Controller
@@ -13,7 +14,7 @@ class CompanyController extends Controller
         return view('company.list', ['companys'=>$companys ]);
     }
 
-    public function confirm(Request $request){
+    public function confirm(CompanyRequest $request){
         $company = $request->company_name;
 
         return view('company.confirm',['company' => $company]);

@@ -10,6 +10,7 @@
     <form action="{{ route('craft.complete') }}" method="post">
         @csrf
         <table class="table table-bordered">
+            {{-- {{dd($company['company_info'])}} --}}
             <tr>
                 <th>所属</th>
                 <td>{{$company['company_info']['name']}}</td>

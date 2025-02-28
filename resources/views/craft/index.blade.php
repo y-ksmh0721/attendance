@@ -5,7 +5,7 @@
 @section('content')
 <div class="container">
     <h2 class="mb-4">職人登録画面</h2>
-
+    {{-- {{dd($companys)}} --}}
     <!-- 現場登録フォーム -->
     <form action="{{route('craft.confirm')}}" method="post">
         @csrf
@@ -20,15 +20,18 @@
             <tbody>
                 <tr>
                     <td>
-                        <select class="form-control" id="craft_name" name="company_info" required>
-                            <option value="">選択してください</option>
+                        <select class="form-control" id="company_info" name="company_info" required>
+                            <option value="" disabled {{ old('company_info') == '' ? 'selected' : '' }}>選択してください</option>
                             @foreach ($companys as $company)
-                                <option value="{{$company}}">{{ $company['name'] }}</option>
+                                <option value="{{ $company }}"
+                                    {{ old('company_info') == $company['name'] ? 'selected' : '' }}>
+                                    {{ $company['name'] }}
+                                </option>
                             @endforeach
                         </select>
                     </td>
                     <td>
-                        <input type="text" class="form-control" id="craft_name" name="craft_name" value="{{ old('craft_name') }}">
+                        <input type="text" class="form-control" id="craft_name" name="craft_name" value="{{ old('craft_name') }}" required>
                     </td>
                     <td>
                         <button type="submit" class="btn btn-primary">確認画面へ</button>

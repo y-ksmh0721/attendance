@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Work;
 use App\Models\Cliant;
+use App\Http\Requests\WorkRequest;
 
 class WorkController extends Controller
 {
@@ -19,20 +20,9 @@ class WorkController extends Controller
         return view('works.index', compact('works','cliants'));
     }
 
-    // public function confirm(Request $request){
-    //     $work = (object) $request->only(['site_name']);
-    //     $cliant = (object) $request->all();
-    //     dd($cliant);
-    //     return view('works.confirm', ['work' => $work,'cliant'=>$cliant]);
-    // }
-    // public function confirm(Request $request) {
-    //     $work = (object) $request->only(['site_name']);
-    //     $cliant = Cliant::find($request->id);
-    //     return view('works.confirm', ['work' => $work, 'cliant' => $cliant]);
-    // }
-
-    public function confirm(Request $request) {
+    public function confirm(WorkRequest $request) {
         $work = (object) $request->only(['site_name']);
+        
         $cliant = $request->all();
         if (isset($cliant['cliant_info'])) {
             $cliant['cliant_info'] = json_decode($cliant['cliant_info'], true);
@@ -50,8 +40,7 @@ class WorkController extends Controller
         $works->cliant_id = $request['cliant_id'];
         $works->save();
 
-
-        return view('works.complete',compact('work'));
+        return redirect()->route('works.index');
     }
 
     public function toggleStatus($id) {
