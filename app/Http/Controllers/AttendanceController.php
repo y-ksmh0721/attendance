@@ -39,8 +39,41 @@ class AttendanceController extends Controller
         $user = $request->user();
         $userId = $user['id'];
 
+        //フォームで送られてきた値取得
+        // $date = $request->input('date');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $keyword = $request->input('keyword');
+
         //リレーションにて結合したcraftとcompanyをattendanceテーブルと一緒に持ってくる
-        $attendances = Attendance::with(['craft.company'])->get();
+        $attendances = Attendance::with(['craft.company'])->orderby('date','desc');
+
+        // if($date){
+        //     $attendance = $attendances->where('date',$date);
+        // }
+
+        // 開始日と終了日がある場合
+        if ($startDate && $endDate) {
+            $attendances = $attendances->whereBetween('date', [$startDate, $endDate]);
+        } elseif ($startDate) {
+            $attendances = $attendances->where('date', '>=', $startDate);
+        } elseif ($endDate) {
+            $attendances = $attendances->where('date', '<=', $endDate);
+        }
+
+        if($keyword){
+            $attendances = $attendances->where(function($query) use ($keyword){
+                $query->where('name', 'like', "%$keyword%")
+                        ->orwhere('morning_site', 'like', "%$keyword%")
+                        ->orwhere('afternoon_site', 'like', "%$keyword%")
+                        ->orWhereHas('craft.company', function($query) use ($keyword){
+                            $query->where('name', 'like', "%$keyword%");
+                        });
+            });
+        }
+
+         $attendances = $attendances->get();
+
         //attendanceテーブルの日付を曜日に変換する
         foreach($attendances as $attendance){
             $attendance->day_of_week = Carbon::parse($attendance->date)->locale('ja')->isoFormat('ddd');

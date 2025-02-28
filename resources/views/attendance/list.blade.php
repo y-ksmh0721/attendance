@@ -3,10 +3,30 @@
 @section('complete', '完了')
 
 @section('content')
+ <div class="container">
 
-<div class="container">
-    <h2 class="mb-4">出勤表</h2>
     <table class="table table-bordered full-width-table">
+        <form method="GET" action="{{ route('attendance.list') }}">
+            @csrf
+            <tr>
+                <td></td>
+                <td></td>
+                <td> <label for="">検索フォーム</label></td>
+                <td>
+                    <label for="start_date" class="form-label">開始日</label>
+                    <input type="date" name="start_date" class="form-control" id="start_date" value="{{ old('start_date') }}">
+                </td>
+                <td>
+                    <label for="end_date" class="form-label">終了日</label>
+                    <input type="date" name="end_date" class="form-control" id="end_date" value="{{ old('end_date') }}">
+                </td>
+                <td>                <label for="keyword" class="form-label">キーワード</label>
+                    <input type="text" name="keyword" class="form-control" id="keyword" value="{{ old('keyword') }}" placeholder="名前や現場名を入力"></td>
+                <td>
+                    <button type="submit" class="btn btn-primary">検索/解除</button>
+                </td>
+            </tr>
+        </form>
         <tr>
             <th>日付</th>
             <th>曜日</th>
@@ -28,7 +48,7 @@
                 @if($attendance->craft && $attendance->craft->company)
                     {{ $attendance->craft->company->name }}
                 @else
-                     所属情報なし
+                    所属情報なし
                 @endif
             </td>
             <td>{{ $attendance->morning_site }}</td>
@@ -55,4 +75,5 @@
 </script>
 
 @endsection
+
 
