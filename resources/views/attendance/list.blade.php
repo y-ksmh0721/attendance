@@ -6,6 +6,30 @@
 
 <div class="container">
     <h2 class="mb-4">出勤表</h2>
+    <label for="">検索フォーム</label>
+<form method="GET" action="{{ route('attendance.list') }}">
+    {{-- 開始日 --}}
+    <div class="mb-3 d-flex-form">
+        <div class="me-3">
+            <label for="start_date" class="form-label">開始日</label>
+            <input type="date" name="start_date" class="form-control" id="start_date" value="{{ old('start_date') }}">
+        </div>
+
+        {{-- 終了日 --}}
+        <div>
+            <label for="end_date" class="form-label">終了日</label>
+            <input type="date" name="end_date" class="form-control" id="end_date" value="{{ old('end_date') }}">
+        </div>
+    </div>
+
+    {{-- キーワード検索 --}}
+    <div class="mb-3">
+        <label for="keyword" class="form-label">キーワード</label>
+        <input type="text" name="keyword" class="form-control" id="keyword" value="{{ old('keyword') }}" placeholder="名前や現場名を入力">
+    </div>
+
+    <button type="submit" class="btn btn-primary">検索</button>
+</form>
     <table class="table table-bordered full-width-table">
         <tr>
             <th>日付</th>

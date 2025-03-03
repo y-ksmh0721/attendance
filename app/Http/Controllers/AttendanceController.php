@@ -30,8 +30,6 @@ class AttendanceController extends Controller
         $newAtt->overtime = $attendance['overtime'];
         $newAtt->save();
 
-
-
         return view('attendance.complete',compact('attendance'));
     }
 
@@ -40,7 +38,44 @@ class AttendanceController extends Controller
         $userId = $user['id'];
 
         //リレーションにて結合したcraftとcompanyをattendanceテーブルと一緒に持ってくる
-        $attendances = Attendance::with(['craft.company'])->get();
+
+        $attendances = Attendance::with(['craft.company'])->orderby('date','desc');
+
+            // フォームで送られてきた値を取得
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $keyword = $request->input('keyword');
+
+
+        //一日のみの検索の場合の処理
+        // if($date){
+        //     $attendance = $attendances->where('date',$date);
+        // }
+
+        // 開始日と終了日がある場合
+        if ($startDate && $endDate) {
+            $attendances = $attendances->whereBetween('date', [$startDate, $endDate]);
+        } elseif ($startDate) {
+            $attendances = $attendances->where('date', '>=', $startDate);
+        } elseif ($endDate) {
+            $attendances = $attendances->where('date', '<=', $endDate);
+        }
+
+        //キーワード検索処理
+        if($keyword){
+            $attendances = $attendances->where(function($query) use ($keyword){
+                $query->where('name', 'like', "%$keyword%")
+                        ->orwhere('morning_site', 'like', "%$keyword%")
+                        ->orwhere('afternoon_site', 'like', "%$keyword%")
+                        ->orWhereHas('craft.company', function($query) use ($keyword){
+                            $query->where('name', 'like', "%$keyword%");
+                        });
+            });
+        }
+
+        //絞り込んだデータの取得
+         $attendances = $attendances->get();
+
         //attendanceテーブルの日付を曜日に変換する
         foreach($attendances as $attendance){
             $attendance->day_of_week = Carbon::parse($attendance->date)->locale('ja')->isoFormat('ddd');
