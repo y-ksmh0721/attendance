@@ -14,21 +14,23 @@ use App\Http\Requests\AttendanceRequest;
 class AttendanceController extends Controller
 {
     public function confirm(ValidateRequest $request){
+        $user = $request->user();
         // $attendance = (object) $request->all();
         $attendance = $request->all();
-        return view('attendance.confirm',['attendance' => $attendance]);
+        return view('attendance.confirm',[
+            'attendance' => $attendance,
+            'user' => $user
+        ]);
     }
 
-    public function complete(Request $request)
-{
-    $attendance = $request->all();
+    public function complete(Request $request){
+        $attendance = $request->all();
 
-    // dd($attendance);
 
-    // 現場と作業内容が配列で送信される
-    $sites = $attendance['site']; // 現場名の配列
-    $workContents = $attendance['work_content']; // 作業内容の配列
-    $otherWorkContents = $attendance['other_work_content']; // 「その他」の作業内容（テキスト入力）
+        // 現場と作業内容が配列で送信される
+        $sites = $attendance['site']; // 現場名の配列
+        $workContents = $attendance['work_content']; // 作業内容の配列
+        $otherWorkContents = $attendance['other_work_content']; // 「その他」の作業内容（テキスト入力）
 
 
     foreach ($sites as $index => $site) {
@@ -43,27 +45,12 @@ class AttendanceController extends Controller
         $newAtt->site = $site;
         $newAtt->work_content = $workContent;
         $newAtt->end_time = $attendance['end_time'];
+        $newAtt->write = $request->user_id;
         $newAtt->save();
     }
 
     return view('attendance.complete', compact('attendance'));
 }
-
-
-    // public function complete(Request $request){
-    //     $attendance = $request->all();
-
-    //     $newAtt = new Attendance();
-    //     $newAtt->name = $attendance['name'];
-    //     $newAtt->work_type = $attendance['work_type'];
-    //     $newAtt->date = $attendance['date'];
-    //     $newAtt->site = $attendance['site'];
-    //     $newAtt->work_content = $attendance['work_content'];
-    //     $newAtt->end_time = $attendance['end_time'];
-    //     $newAtt->save();
-
-    //     return view('attendance.complete',compact('attendance'));
-    // }
 
     public function list(Request $request){
         $user = $request->user();
@@ -71,9 +58,7 @@ class AttendanceController extends Controller
 
         //リレーションにて結合したcraftとcompanyをattendanceテーブルと一緒に持ってくる
 
-        $attendances = Attendance::with(['craft.company'])->orderby('date','desc');
-
-        dd($attendances);
+        $attendances = Attendance::with(['craft.company','work.cliant'])->orderby('date','desc');
 
         // フォームで送られてきた値を取得
         $startDate = $request->input('start_date');

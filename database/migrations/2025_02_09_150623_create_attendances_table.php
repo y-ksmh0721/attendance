@@ -19,7 +19,9 @@ return new class extends Migration
             $table->string('site', 255); // 現場名
             $table->string('work_content', 255)->nullable(); // 作業内容
             $table->time('end_time')->default('00:00:00'); //終了時間
+            $table->string('time_type')->default('終日'); //終了時間
             $table->decimal('overtime', 4, 1)->default(0); // 残業時間（小数対応）
+            $table->string('write',255);
             $table->timestamps();
         });
     }

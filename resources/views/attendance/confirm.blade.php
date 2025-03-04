@@ -9,6 +9,7 @@
     <!-- 出勤記録フォーム -->
     <form action="{{ route('attendance.complete') }}" method="post">
         @csrf
+        <input type="hidden" name="user_id" value="{{$user->id}}">
         <input type="hidden" name="work_type" value="{{ $attendance['work_type'] }}">
         <input type="hidden" name="date" value="{{ $attendance['date'] }}">
         <input type="hidden" name="name" value="{{ $attendance['name'] }}">
@@ -59,18 +60,3 @@
 </div>
 @endsection
 
-
-{{-- <td>
-                    @foreach($attendance['site'] as $site)
-                     {{$site}}<br>
-                     <input type="hidden" name="site[]" value="{{$site}}">
-                    @endforeach
-                </td> --}}
-
-
-                                {{-- <td>
-                    @foreach($attendance['work_content'] as $workContent)
-                    {{$workContent}}<br>
-                    <input type="hidden" name="work_content[]" value="{{$workContent}}">
-                    @endforeach
-                </td><input type="hidden" > --}}
