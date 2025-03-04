@@ -140,6 +140,24 @@ table tr:hover {
     background-color: #f1f1f1;
 }
 
+.site-group{
+    position: relative;
+}
+.add-site{
+    width: 50px;
+    position: absolute;
+    right: 35%;
+    top: 0px;
+    transform: scale(0.8);
+}
+.remove-site{
+    width: 50px;
+    position: absolute;
+    right: 35%;
+    top: 0px;
+    transform: scale(0.8);
+}
+
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
     .btn {
@@ -171,7 +189,7 @@ table tr:hover {
     }
 
     .btn {
-        width: 100%;
+        width: 30%;
         padding: 15px;
         font-size: 20px;
     }
@@ -191,5 +209,22 @@ table tr:hover {
 
     table th, table td {
         padding: 8px;
+    }
+    .site-group{
+        position: relative;
+    }
+    .add-site{
+        width: 50px;
+        position: absolute;
+        right: 15%;
+        top: -15px;
+        transform: scale(0.4);
+    }
+    .remove-site{
+        width: 50px;
+        position: absolute;
+        right: 15%;
+        top: -15px;
+        transform: scale(0.4);
     }
 }

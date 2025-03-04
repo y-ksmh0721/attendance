@@ -32,13 +32,14 @@
 </form>
     <table class="table table-bordered full-width-table">
         <tr>
-            <th>日付</th>
-            <th>曜日</th>
-            <th>名前</th>
-            <th>所属</th>
-            <th>午前の現場</th>
-            <th>午後の現場</th>
-            <th>残業</th>
+            <th>日付</th> 
+            <th>科目</th>
+            <th>客先名</th>
+            <th>現場名</th>
+            <th>作業者名</th>
+            <th>時間</th>
+            <th>種別</th>
+            <th>人数</th>
             @if(in_array($user['id'], [1, 2]))
             <th>編集</th>
             @endif

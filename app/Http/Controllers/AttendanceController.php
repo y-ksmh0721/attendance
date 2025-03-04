@@ -19,19 +19,51 @@ class AttendanceController extends Controller
         return view('attendance.confirm',['attendance' => $attendance]);
     }
 
-    public function complete(Request $request){
-        $attendance = $request->all();
+    public function complete(Request $request)
+{
+    $attendance = $request->all();
 
+    // dd($attendance);
+
+    // 現場と作業内容が配列で送信される
+    $sites = $attendance['site']; // 現場名の配列
+    $workContents = $attendance['work_content']; // 作業内容の配列
+    $otherWorkContents = $attendance['other_work_content']; // 「その他」の作業内容（テキスト入力）
+
+
+    foreach ($sites as $index => $site) {
+        // 作業内容が「その他」の場合、テキストボックスの内容を使用
+        $workContent = $workContents[$index] == 'その他' ? $otherWorkContents[$index] : $workContents[$index];
+
+        // 新しい出勤データを作成
         $newAtt = new Attendance();
-        $newAtt->date = $attendance['date'];
         $newAtt->name = $attendance['name'];
-        $newAtt->morning_site = $attendance['morning_site'];
-        $newAtt->afternoon_site = $attendance['afternoon_site'];
-        $newAtt->overtime = $attendance['overtime'];
+        $newAtt->work_type = $attendance['work_type'];
+        $newAtt->date = $attendance['date'];
+        $newAtt->site = $site;
+        $newAtt->work_content = $workContent;
+        $newAtt->end_time = $attendance['end_time'];
         $newAtt->save();
-
-        return view('attendance.complete',compact('attendance'));
     }
+
+    return view('attendance.complete', compact('attendance'));
+}
+
+
+    // public function complete(Request $request){
+    //     $attendance = $request->all();
+
+    //     $newAtt = new Attendance();
+    //     $newAtt->name = $attendance['name'];
+    //     $newAtt->work_type = $attendance['work_type'];
+    //     $newAtt->date = $attendance['date'];
+    //     $newAtt->site = $attendance['site'];
+    //     $newAtt->work_content = $attendance['work_content'];
+    //     $newAtt->end_time = $attendance['end_time'];
+    //     $newAtt->save();
+
+    //     return view('attendance.complete',compact('attendance'));
+    // }
 
     public function list(Request $request){
         $user = $request->user();
@@ -41,16 +73,12 @@ class AttendanceController extends Controller
 
         $attendances = Attendance::with(['craft.company'])->orderby('date','desc');
 
-            // フォームで送られてきた値を取得
+        dd($attendances);
+
+        // フォームで送られてきた値を取得
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $keyword = $request->input('keyword');
-
-
-        //一日のみの検索の場合の処理
-        // if($date){
-        //     $attendance = $attendances->where('date',$date);
-        // }
 
         // 開始日と終了日がある場合
         if ($startDate && $endDate) {
@@ -65,8 +93,7 @@ class AttendanceController extends Controller
         if($keyword){
             $attendances = $attendances->where(function($query) use ($keyword){
                 $query->where('name', 'like', "%$keyword%")
-                        ->orwhere('morning_site', 'like', "%$keyword%")
-                        ->orwhere('afternoon_site', 'like', "%$keyword%")
+                        ->orwhere('site', 'like', "%$keyword%")
                         ->orWhereHas('craft.company', function($query) use ($keyword){
                             $query->where('name', 'like', "%$keyword%");
                         });

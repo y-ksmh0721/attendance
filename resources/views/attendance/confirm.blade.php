@@ -9,33 +9,46 @@
     <!-- 出勤記録フォーム -->
     <form action="{{ route('attendance.complete') }}" method="post">
         @csrf
+        <input type="hidden" name="work_type" value="{{ $attendance['work_type'] }}">
+        <input type="hidden" name="date" value="{{ $attendance['date'] }}">
+        <input type="hidden" name="name" value="{{ $attendance['name'] }}">
+        @foreach($attendance['other_work_content'] as $otherWorkContent)
+        <input type="hidden" name="other_work_content[]" value="{{ $otherWorkContent}}">
+        @endforeach
         <table class="table table-bordered">
+            <tr>
+                <th>科目</th>
+                <td>{{ $attendance['work_type']}}</td>
+            </tr>
             <tr>
                 <th>出勤日</th>
                 <td>{{ $attendance['date'] }}</td>
-                <input type="hidden" name="date" value="{{ $attendance['date'] }}">
             </tr>
             <tr>
-                <th>午前の現場</th>
+                <th>名前</th>
                 <td>{{ $attendance['name']}}</td>
-                <input type="hidden" name="name" value="{{ $attendance['name'] }}">
-            </tr>
-
-            <tr>
-                <th>午前の現場</th>
-                <td>{{ $attendance['morning_site'] }}</td>
-                <input type="hidden" name="morning_site" value="{{ $attendance['morning_site'] }}">
             </tr>
             <tr>
-                <th>午後の現場</th>
-                <td>{{ $attendance['afternoon_site'] }}</td>
-                <input type="hidden" name="afternoon_site" value="{{ $attendance['afternoon_site'] }}">
+                <th>終了時間</th>
+                <td>{{ $attendance['end_time'] }}</td>
+                <input type="hidden" name="end_time" value="{{ $attendance['end_time'] }}">
             </tr>
             <tr>
-                <th>残業時間</th>
-                <td>{{ $attendance['overtime'] }}</td>
-                <input type="hidden" name="overtime" value="{{ $attendance['overtime'] }}">
+                <th>今日の現場</th>
+                <th>作業内容</th>
             </tr>
+            @foreach ($attendance['site'] as $index => $site)
+                <tr>
+                    <td>
+                        {{ $site }}
+                        <input type="hidden" name="site[]" value="{{$site}}">
+                    </td> <!-- 今日の現場 -->
+                    <td>
+                        {{ $attendance['work_content'][$index] }}
+                        <input type="hidden" name="work_content[]" value="{{$attendance['work_content'][$index]}}">
+                    </td> <!-- 作業内容 -->
+                </tr>
+            @endforeach
         </table>
 
         <div class="d-flex justify-content-start">
@@ -46,3 +59,18 @@
 </div>
 @endsection
 
+
+{{-- <td>
+                    @foreach($attendance['site'] as $site)
+                     {{$site}}<br>
+                     <input type="hidden" name="site[]" value="{{$site}}">
+                    @endforeach
+                </td> --}}
+
+
+                                {{-- <td>
+                    @foreach($attendance['work_content'] as $workContent)
+                    {{$workContent}}<br>
+                    <input type="hidden" name="work_content[]" value="{{$workContent}}">
+                    @endforeach
+                </td><input type="hidden" > --}}
