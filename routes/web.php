@@ -43,6 +43,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/attendance/complete', [AttendanceController::class, 'complete'])->name('attendance.complete');
     Route::get('/attendance/edit{id}', [AttendanceController::class, 'edit'])->name('attendance.edit');
     Route::post('/attendance/update/{id}', [AttendanceController::class, 'update'])->name('attendance.update');
+    Route::post('/attendance/{id}/toggle-status', [AttendanceController::class, 'toggleStatus'])
+    ->name('attendance.toggleStatus');
+    Route::post('/attendance/{id}/toggleOvertime', [AttendanceController::class, 'toggleOvertime'])
+    ->name('attendance.toggleOvertime');
 
     // 現場登録画面
     Route::get('/works', [WorkController::class, 'index'])->name('works.index');

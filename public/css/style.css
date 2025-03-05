@@ -17,10 +17,12 @@ header {
 }
 
 /* ボタンデザイン */
-.btn {
+.btn,
+.badge,
+.bg-warning{
     display: inline-block;
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 5px 10px;
+    font-size: 13px;
     color: white;
     background-color: #007bff;
     border: none;
@@ -42,30 +44,36 @@ header {
 
 /* テーブルデザイン */
 table {
-    width: 90%;
-    max-width: 800px;
-    margin: 20px auto;
+    width: 100%; /* 画面幅いっぱいに広がる */
+    max-width: 100%;
+    margin: 0 auto;
     border-collapse: collapse;
     background-color: white;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    overflow: hidden;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    table-layout: fixed; /* カラム幅を均等に設定 */
 }
 
 table th, table td {
-    padding: 12px;
+    padding: 8px 12px; /* 少し狭くしてコンパクトに */
     text-align: center;
     border-bottom: 1px solid #ddd;
+    font-size: 0.95rem;
+    word-wrap: break-word; /* 長いテキストが切れて表示されるようにする */
 }
 
 table th {
-    background-color: #007bff;
+    background: linear-gradient(135deg, #007bff, #0069d9);
     color: white;
     font-weight: bold;
 }
 
 table tr:hover {
     background-color: #f1f1f1;
+}
+
+table td:first-child {
+    font-weight: bold;
 }
 
 /* ボタンの配置 */
@@ -76,15 +84,15 @@ table tr:hover {
 }
 
 .d-flex a, .d-flex button {
-    font-size: 1rem;
-    padding: 8px 15px;
+    font-size: 0.9rem;
+    padding: 6px 12px;
 }
 
 .d-flex a {
     background-color: #6c757d;
     color: white;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 4px;
 }
 
 .d-flex a:hover {
@@ -95,7 +103,7 @@ table tr:hover {
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
 }
 
 .d-flex button:hover {
@@ -103,20 +111,9 @@ table tr:hover {
 }
 
 /* フルスクリーン表示用のテーブル */
-/* .full-width-table {
-    width: 100%;
-    max-width: none;
-    margin: 0;
-    border-collapse: collapse;
-    background-color: white;
-    box-shadow: none;
-    border-radius: 0;
-} */
-/* フルスクリーン表示用のテーブル */
 .full-width-table {
     width: 100%;
-    max-width: none;
-    margin: 0;
+    margin: 0 auto;
     border-collapse: collapse;
     background-color: white;
     box-shadow: none;
@@ -125,7 +122,7 @@ table tr:hover {
 
 
 .full-width-table th, .full-width-table td {
-    padding: 15px;
+    padding: 2px;
     text-align: center;
     border-bottom: 1px solid #ddd;
 }
@@ -156,6 +153,9 @@ table tr:hover {
     right: 35%;
     top: 0px;
     transform: scale(0.8);
+}
+.site-group{
+    margin-bottom: 5px;
 }
 
 /* レスポンシブ対応 */

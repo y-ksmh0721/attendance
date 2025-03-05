@@ -51,7 +51,7 @@
             <div id="site-container">
                 <div class="site-group">
                     <label>今日の現場</label>
-                    <select class="form-control" name="site[]" required>
+                    <select class="form-control site-select" name="site[]" required onchange="updateAvailableSites()">
                         <option value="" disabled selected>選択してください</option>
                         <option value="休み">休み</option>
                         @foreach ($works as $work)
@@ -70,17 +70,17 @@
                         <option value="洗浄">洗浄</option>
                         <option value="その他">その他</option>
                     </select>
+                    <br>
 
                     <input type="text" class="form-control other-work-content" name="other_work_content[]" style="display: none;" placeholder="作業内容を入力">
+
+
+                    <label>終了時間</label>
+                    <input type="time" class="form-control end-time" name="end_time[]" value="17:00" required>
                     <br>
 
                     <button type="button" class="btn btn-success add-site">+</button>
                 </div>
-            </div>
-            <!-- 終了時間 -->
-            <div class="mb-3">
-                <label for="end_time" class="form-label">終了時間</label>
-                <input type="time" class="form-control" id="end_time" name="end_time" value="{{ old('end_time','17:00') }}" required>
             </div>
             <!-- 送信ボタン -->
             <button type="submit" class="btn btn-primary">記録する</button>
@@ -115,17 +115,6 @@ function toggleCheckbox(clickedCheckbox) {
     });
 }
 
-// function toggleOtherInput(selectElement) {
-//     let otherInput = document.getElementById("other_work_content");
-//     if (selectElement.value === "その他") {
-//         otherInput.style.display = "block";
-//         otherInput.style.width = "100px";
-//         otherInput.style.margin = "0 auto"; // テキストボックスを表示
-//     } else {
-//         otherInput.style.display = "none";  // テキストボックスを非表示
-//         otherInput.value = "";              // 入力をクリア
-//     }
-// }
 document.querySelector("form").addEventListener("submit", function(event) {
     let workContent = document.getElementById("work_content");
     let otherWorkContent = document.getElementById("other_work_content");
@@ -139,7 +128,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const maxSites = 5; // 最大5つまで
     const siteContainer = document.getElementById("site-container");
 
-    // ＋ボタンを押したときの処理
+    // + ボタンの処理
     document.querySelector(".add-site").addEventListener("click", function () {
         if (siteContainer.children.length < maxSites) {
             let newSite = siteContainer.children[0].cloneNode(true);
@@ -148,6 +137,7 @@ document.addEventListener("DOMContentLoaded", function () {
             newSite.querySelector("select[name='work_content[]']").value = "";
             newSite.querySelector(".other-work-content").value = "";
             newSite.querySelector(".other-work-content").style.display = "none";
+            newSite.querySelector(".end-time").value = "17:00"; // 終了時間をリセット
 
             // クローンにはプラスボタンを付けない
             let addButton = newSite.querySelector(".add-site");
@@ -162,10 +152,13 @@ document.addEventListener("DOMContentLoaded", function () {
             minusButton.textContent = "−";
             minusButton.addEventListener("click", function () {
                 this.parentNode.remove();
+                updateAvailableSites();
             });
 
             newSite.appendChild(minusButton);
             siteContainer.appendChild(newSite);
+
+            updateAvailableSites();
         }
     });
 
@@ -180,7 +173,35 @@ document.addEventListener("DOMContentLoaded", function () {
             otherInput.style.display = "none";
         }
     };
+
+    // 現在選択されている現場をリストから除外する
+    window.updateAvailableSites = function() {
+        let selectedSites = new Set();
+        let siteSelects = document.querySelectorAll("select[name='site[]']");
+
+        siteSelects.forEach(select => {
+            if (select.value) {
+                selectedSites.add(select.value);
+            }
+        });
+
+        siteSelects.forEach(select => {
+            let options = select.querySelectorAll("option");
+            options.forEach(option => {
+                if (option.value && option.value !== "休み") {
+                    option.hidden = selectedSites.has(option.value) && option.value !== select.value;
+                }
+            });
+        });
+    };
+
+    document.addEventListener("change", function(event) {
+        if (event.target.matches("select[name='site[]']")) {
+            updateAvailableSites();
+        }
+    });
 });
+
 
 
 

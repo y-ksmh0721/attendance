@@ -19,35 +19,33 @@
         <table class="table table-bordered">
             <tr>
                 <th>科目</th>
-                <td>{{ $attendance['work_type']}}</td>
-            </tr>
-            <tr>
                 <th>出勤日</th>
-                <td>{{ $attendance['date'] }}</td>
-            </tr>
-            <tr>
                 <th>名前</th>
-                <td>{{ $attendance['name']}}</td>
             </tr>
             <tr>
-                <th>終了時間</th>
-                <td>{{ $attendance['end_time'] }}</td>
-                <input type="hidden" name="end_time" value="{{ $attendance['end_time'] }}">
+                <td>{{ $attendance['work_type']}}</td>
+                <td>{{ $attendance['date'] }}</td>
+                <td>{{ $attendance['name']}}</td>
             </tr>
             <tr>
                 <th>今日の現場</th>
                 <th>作業内容</th>
+                <th>終了時間</th>
             </tr>
             @foreach ($attendance['site'] as $index => $site)
                 <tr>
-                    <td>
+                    <td><!-- 今日の現場 -->
                         {{ $site }}
                         <input type="hidden" name="site[]" value="{{$site}}">
-                    </td> <!-- 今日の現場 -->
-                    <td>
+                    </td>
+                    <td> <!-- 作業内容 -->
                         {{ $attendance['work_content'][$index] }}
                         <input type="hidden" name="work_content[]" value="{{$attendance['work_content'][$index]}}">
-                    </td> <!-- 作業内容 -->
+                    </td>
+                    <td> <!-- 終了時間 -->
+                        {{ $attendance['end_time'][$index]}}
+                        <input type="hidden" name="end_time[]" value="{{$attendance['end_time'][$index]}}">
+                    </td>
                 </tr>
             @endforeach
         </table>

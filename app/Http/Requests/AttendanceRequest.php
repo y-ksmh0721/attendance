@@ -22,9 +22,12 @@ class AttendanceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'morning_site' => 'required',
-            'afternoon_site' => 'required',
-            'overtime' => 'required'
+            'site' => 'required',
+            'work_type' => 'required',
+            'end_time' => 'required',
+            'date' => 'required',
+            'time_type' => 'required'
+
         ];
     }
 }
