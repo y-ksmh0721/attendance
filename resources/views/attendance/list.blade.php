@@ -21,6 +21,7 @@
                 <input type="date" name="end_date" class="form-control" id="end_date" value="{{ old('end_date') }}">
             </td>
             <td>
+                <label for="end_date" class="form-label">キーワード検索</label>
                 <input type="text" name="keyword" class="form-control" id="keyword" value="{{ old('keyword') }}" placeholder="名前や現場名を入力">
             </td>
             <td>

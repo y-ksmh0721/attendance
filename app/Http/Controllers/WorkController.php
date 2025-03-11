@@ -16,13 +16,13 @@ class WorkController extends Controller
         $works = Work::with('cliant')
         ->orderByDesc('created_at')
         ->get();
-        // dd($works);
+        
         return view('works.index', compact('works','cliants'));
     }
 
     public function confirm(WorkRequest $request) {
         $work = (object) $request->only(['site_name']);
-        
+
         $cliant = $request->all();
         if (isset($cliant['cliant_info'])) {
             $cliant['cliant_info'] = json_decode($cliant['cliant_info'], true);
