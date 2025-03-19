@@ -54,7 +54,7 @@
         </thead>
         <tbody>
             @foreach ($works as $work)
-            <tr>
+            <tr style="{{ $work->status === 'inactive' ? 'background-color: #919090;' : '' }}">
                 <td>{{ $work->name }}</td>
                 <td>
                     @if($work->cliant)

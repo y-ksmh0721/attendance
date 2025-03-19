@@ -6,7 +6,13 @@
     {{-- ここからbody --}}
     <div class="container">
 
-
+        @if(in_array($user['id'], [1, 2,]))
+            <a class="" href="{{route('management.management')}}">情報登録</a>
+            <a class="" href="{{route('csv.index')}}">CSV画面</a>
+        @endif
+        @if(in_array($user['id'], [1,2,3]))
+            <a class="" href="{{route('craft.index')}}">職人操作</a>
+        @endif
         <h2 class="mb-4">出勤管理</h2>
         {{-- エラー文 --}}
         @if ($errors->any())
@@ -53,6 +59,7 @@
                     <label>今日の現場</label>
                     <select class="form-control site-select" name="site[]" required onchange="updateAvailableSites()">
                         <option value="" disabled selected>選択してください</option>
+
                         @foreach ($works as $work)
                             @if ($work->status === 'active')
                                 <option value="{{ $work->name }}">{{ $work->name }}</option>
@@ -83,7 +90,7 @@
                 </div>
             </div>
             <!-- 送信ボタン -->
-            <button type="submit" class="btn btn-primary">記録する</button>
+            <button type="submit" class="btn btn-primary">記録</button>
         </form>
     </div>
     <a href="#" id="logout-link">ログアウト</a>

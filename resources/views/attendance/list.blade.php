@@ -15,7 +15,7 @@
         <label for="end_date" class="form-label">キーワード検索</label>
         <input type="text" name="keyword" class="form-control" id="keyword" value="{{ old('keyword', request()->get('keyword')) }}" placeholder="名前や現場名を入力">
         <button type="submit" class="btn btn-primary">検索</button>
-        <button><a href="list">解除</a></button>
+        <button><a href="{{route('attendance.list')}}">解除</a></button>
     </form>
     <table class="table table-bordered full-width-table">
         <tr>
@@ -100,25 +100,20 @@
         @foreach($attendances as $attendance)
             <div class="attendance-item">
                 <div class="attendance-detail">
-                    <span class="label">作業者名:</span> <span class="value">{{ $attendance->name }}</span>
+                    <span class="label">{{ $attendance->date }} / {{ $attendance->name }}</span>
                 </div>
                 <div class="attendance-detail">
-                    <span class="label">日付:</span> <span class="value">{{ $attendance->date }}</span>
+                    <span class="label">{{ $attendance->work->cliant->cliant_name }}</span>
                 </div>
                 <div class="attendance-detail">
-                    <span class="label">客先名:</span> <span class="value">{{ $attendance->work->cliant->cliant_name }}</span>
+                    <span class="label">{{ $attendance->work->name }}</span>
                 </div>
                 <div class="attendance-detail">
-                    <span class="label">現場名:</span> <span class="value">{{ $attendance->work->name }}</span>
-                </div>
-                <div class="attendance-detail">
-                    <span class="label">時間:</span> <span class="value">{{ $attendance->time_type }}</span>
-                </div>
-                <div class="attendance-detail">
-                    <span class="label">終了時間:</span> <span class="value">{{ \Carbon\Carbon::parse($attendance->end_time)->format('H:i') }}</span>
-                </div>
-                <div class="attendance-detail">
-                    <span class="label">残業:</span> <span class="value">{{ substr($attendance->overtime, 0, 5) }}</span>
+                    <span class="label">
+                        {{ $attendance->time_type }} /
+                        {{ \Carbon\Carbon::parse($attendance->end_time)->format('H:i') }} /
+                        {{ substr($attendance->overtime, 0, 5) }}
+                    </span>
                 </div>
                 @if(in_array($user['id'], [1, 2]))
                     <div class="attendance-actions">
@@ -148,6 +143,7 @@
         @endforeach
     </div>
 </div>
+{{ $attendances->appends(request()->query())->links() }}
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {

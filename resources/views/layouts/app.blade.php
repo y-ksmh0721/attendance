@@ -11,7 +11,7 @@
         <h1>Y's TEC</h1>
         <a class="hd-menu" href="{{route('dashboard')}}">出勤管理</a>
         <a class="hd-menu" href="{{route('attendance.list')}}">出勤一覧</a>
-        <a class="hd-menu" href="{{route('management.management')}}">登録管理</a>
+        
     </header>
 
     <main>

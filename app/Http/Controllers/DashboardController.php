@@ -8,12 +8,13 @@ use App\Models\Craft;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $user = $request->user();
         $works = Work::all(); // `works` テーブルのデータを取得
         $crafts = Craft::all();
 
 
-        return view('dashboard', compact('works','crafts'));
+        return view('dashboard', compact('works','crafts','user'));
     }
 }

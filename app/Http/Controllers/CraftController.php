@@ -10,6 +10,7 @@ use App\Http\Requests\CraftRequest;
 class CraftController extends Controller
 {
     public function index(Request $request){
+        $user = $request->user();
         //ドロップダウン
         $companys = Company::all();
         //リスト
@@ -32,7 +33,8 @@ class CraftController extends Controller
 
         return view('craft.index', [
             'companys' => $companys,
-            'craft' => $craft
+            'craft' => $craft,
+            'user' => $user
         ]);
     }
 

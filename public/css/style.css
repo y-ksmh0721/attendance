@@ -157,6 +157,40 @@ table td:first-child {
 .site-group{
     margin-bottom: 5px;
 }
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    justify-content: center;
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.pagination li a,
+.pagination li span {
+    display: block;
+    padding: 8px 12px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    color: #007bff;
+}
+
+.pagination li a:hover {
+    background-color: #e9ecef;
+}
+
+.pagination .disabled span {
+    color: #6c757d;
+    background-color: #fff;
+    border-color: #ddd;
+}
+.inactive-tr{
+    background:red;
+}
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
     .btn {
@@ -212,18 +246,13 @@ table td:first-child {
     .site-group{
         position: relative;
     }
-    .add-site{
-        width: 50px;
+    .add-site,
+    .remove-site {
+        width: 50px !important;
+        height: 50px;
         position: absolute;
-        right: 15%;
-        top: -15px;
-        transform: scale(0.4);
-    }
-    .remove-site{
-        width: 50px;
-        position: absolute;
-        right: 15%;
-        top: -15px;
+        right: 0%;
+        top: 1px;
         transform: scale(0.4);
     }
     .btn {

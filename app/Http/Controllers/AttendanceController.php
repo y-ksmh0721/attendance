@@ -35,8 +35,7 @@ class AttendanceController extends Controller
     foreach ($sites as $index => $site) {
         // 作業内容が「その他」の場合、テキストボックスの内容を使用
         $workContent = $workContents[$index] == 'その他' ? $otherWorkContents[$index] : $workContents[$index];
-        $timeType = $endTime[$index] < '15:00:00' || count($endTime) > 1 ? '半日' : '終日';
-        // dd($attendance['work_type']);
+        $timeType = $endTime[$index] < '14:59:59' || count($endTime) > 1 ? '半日' : '終日';
         $workType = $attendance['work_type'] == '労務' ? '請負' : '外注';
 
         // 新しい出勤データを作成
@@ -91,12 +90,7 @@ class AttendanceController extends Controller
         }
 
         //絞り込んだデータの取得
-         $attendances = $attendances->get();
-
-        //attendanceテーブルの日付を曜日に変換する
-        foreach($attendances as $attendance){
-            $attendance->day_of_week = Carbon::parse($attendance->date)->locale('ja')->isoFormat('ddd');
-        }
+         $attendances = $attendances->paginate(25);
 
         return view('attendance.list',compact('attendances','user'));
     }
