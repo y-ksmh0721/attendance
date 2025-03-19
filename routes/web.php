@@ -9,6 +9,7 @@ use App\Http\Controllers\ManagementController;
 use App\Http\Controllers\CraftController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CsvController;
 
 
 Route::get('/', function () {
@@ -69,6 +70,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/company/confirm', [CompanyController::class, 'confirm'])->name('company.confirm');
     Route::post('/company/complete', [CompanyController::class, 'complete'])->name('company.complete');
     Route::DELETE('/company/destroy{id}', [CompanyController::class, 'destroy'])->name('company.destroy');
+
+    Route::get('/csv', [CsvController::class, 'index'])->name('csv.index');
+    Route::get('/csv/download', [CsvController::class, 'download'])->name('csv.download');
+
 });
 
 

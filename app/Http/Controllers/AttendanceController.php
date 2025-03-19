@@ -60,7 +60,6 @@ class AttendanceController extends Controller
         $userId = $user['id'];
 
         //リレーションにて結合したcraftとcompanyをattendanceテーブルと一緒に持ってくる
-
         $attendances = Attendance::with(['craft.company','work.cliant'])->orderby('date','desc');
 
         // フォームで送られてきた値を取得

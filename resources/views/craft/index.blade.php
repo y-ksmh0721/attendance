@@ -1,12 +1,17 @@
 @extends('layouts.app')
 
-@section('dashboard', 'ダッシュボード')
+@section('dashboard', '出勤フォーム')
 
 @section('content')
 <div class="container">
     <h2 class="mb-4">職人登録画面</h2>
-    {{-- {{dd($companys)}} --}}
-    <!-- 現場登録フォーム -->
+    <form method="GET" action="{{route('craft.index')}}">
+        <label for="keyword" class="form-label">キーワード検索</label>
+        <input type="text" name="keyword" class="form-control" id="keyword" value="{{ old('keyword', request()->get('keyword')) }}" placeholder="名前や会社名を入力">
+        <button type="submit" class="btn btn-primary">検索</button>
+        <button><a href="list">解除</a></button>
+    </form>
+    <!-- 職人登録フォーム -->
     <form action="{{route('craft.confirm')}}" method="post">
         @csrf
         <table class="table table-bordered">
@@ -40,8 +45,6 @@
             </tbody>
         </table>
     </form>
-
-    <h2 class="mt-5">登録一覧</h2>
     <table class="table table-bordered">
         <thead>
             <tr>

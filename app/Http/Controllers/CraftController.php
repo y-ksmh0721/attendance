@@ -13,8 +13,22 @@ class CraftController extends Controller
         //ドロップダウン
         $companys = Company::all();
         //リスト
-        $craft = Craft::with('company')
-        ->get();
+        $craft = Craft::with('company');
+
+        //フォームで送られた値
+        $keyword = $request->input('keyword');
+
+        if($keyword){
+            $craft = $craft->where(function($query) use ($keyword){
+                $query->where('name', 'like', "%$keyword%")
+                      ->orWhereHas('company', function($query) use ($keyword){
+                        $query->where('name', 'like', "%$keyword%");
+                      });
+            });
+        }
+
+        //絞り込んだデータの取得
+        $craft = $craft->get();
 
         return view('craft.index', [
             'companys' => $companys,

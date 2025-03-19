@@ -21,13 +21,6 @@
         <!-- 出勤記録フォーム -->
         <form action="{{route('attendance.confirm')}}" method="post">
             @csrf
-            {{-- 労務・外注 --}}
-            <label>
-                <input type="checkbox" name="work_type" value="労務" onclick="toggleCheckbox(this)"> 労務
-            </label>
-            <label>
-                <input type="checkbox" name="work_type" value="外注" onclick="toggleCheckbox(this)"> 外注
-            </label>
             <!-- 日付選択 -->
             <div class="mb-3">
                 <label for="date" class="form-label">日付</label>
@@ -40,20 +33,26 @@
                     <option value="" disabled {{ old('name') == '' ? 'selected' : '' }}>選択してください</option>
                     @foreach ($crafts as $craft)
                     @if ($craft->status === 'active')
-                        <option value="{{ $craft->name }}" {{old('name') ==$craft->name ? 'selected' : '' }}>
-                            {{ $craft->name }}</option>
-                    @endif
-               @endforeach
-                </select>
-            </div>
-            <br>
+                    <option value="{{ $craft->name }}" {{old('name') ==$craft->name ? 'selected' : '' }}>
+                        {{ $craft->name }}</option>
+                        @endif
+                        @endforeach
+                    </select>
+                </div>
+                {{-- 労務・外注 --}}
+                <label>
+                    <input type="checkbox" name="work_type" value="労務" onclick="toggleCheckbox(this)"> 労務
+                </label>
+                <label>
+                    <input type="checkbox" name="work_type" value="外注" onclick="toggleCheckbox(this)"> 外注
+                </label>
+                <br>
             <!-- 今日の現場（複数追加対応） -->
             <div id="site-container">
                 <div class="site-group">
                     <label>今日の現場</label>
                     <select class="form-control site-select" name="site[]" required onchange="updateAvailableSites()">
                         <option value="" disabled selected>選択してください</option>
-                        <option value="休み">休み</option>
                         @foreach ($works as $work)
                             @if ($work->status === 'active')
                                 <option value="{{ $work->name }}">{{ $work->name }}</option>
@@ -62,14 +61,15 @@
                     </select>
                     <br>
                     <label>作業内容</label>
-                    <select class="form-control work-content" name="work_content[]" required onchange="toggleOtherInput(this)">
-                        <option value="" disabled selected>選択してください</option>
-                        <option value="外壁塗装">外壁塗装</option>
-                        <option value="養生">養生</option>
-                        <option value="防水">防水</option>
-                        <option value="洗浄">洗浄</option>
-                        <option value="その他">その他</option>
-                    </select>
+                        <select class="form-control work-content" name="work_content[]" required onchange="toggleOtherInput(this)">
+                            <option value="" disabled selected>選択してください</option>
+                            <option value="外壁塗装" {{ old('work_content') == '外壁塗装' ? 'selected' : '' }}>外壁塗装</option>
+                            <option value="内部塗装" {{ old('work_content') == '内部塗装' ? 'selected' : '' }}>内部塗装</option>
+                            <option value="洗浄" {{ old('work_content') == '洗浄' ? 'selected' : '' }}>洗浄</option>
+                            <option value="養生" {{ old('work_content') == '養生' ? 'selected' : '' }}>養生</option>
+                            <option value="手直し" {{ old('work_content') == '手直し' ? 'selected' : '' }}>手直し</option>
+                            <option value="その他" {{ old('work_content') == 'その他' ? 'selected' : '' }}>その他</option>
+                        </select>
                     <br>
 
                     <input type="text" class="form-control other-work-content" name="other_work_content[]" style="display: none;" placeholder="作業内容を入力">
