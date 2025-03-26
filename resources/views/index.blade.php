@@ -4,10 +4,14 @@
 
 @section('content')
 <div class="container">
-    <a href="{{ route('login') }}"><button class="btn">ログイン</button></a>
+    Y'sTec出勤管理システムです。<br>
+    不正のないように提出お願いします。<br><br>
+    外注の方は「外注」にチェックを入れて<br>
+    提出してください。<br>
+
+    <a href="{{ route('login') }}"><button class="login-btn">ログイン</button></a>
     <br>
-    <a href="{{ route('register') }}"><button class="btn">新規登録</button></a>
-    <br>
+
 
 </div>
 @endsection

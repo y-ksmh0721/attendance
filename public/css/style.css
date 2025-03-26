@@ -32,7 +32,20 @@ header {
     margin: 10px;
 }
 
-.btn:hover {
+.login-btn{
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 13px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    margin: 10px;
+}
+.btn:hover,
+.login-btn:hover {
     background-color: #0056b3;
 }
 
@@ -191,6 +204,89 @@ table td:first-child {
 .inactive-tr{
     background:red;
 }
+.container {
+    text-align: center;
+    margin: 20px;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap; /* 折り返しを許可 */
+    justify-content: left; /* 均等配置 */
+    gap: 20px; /* カード間の余白 */
+    max-width: 1200px; /* 横幅の最大値 */
+    margin: 10px auto; /* 中央揃え */
+}
+
+/* カードのサイズを調整 */
+.card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    width: calc(25% - 20px); /* 4列レイアウト（余白を考慮） */
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.card h3 {
+    font-size: 18px;
+    margin: 0;
+    color: #333;
+}
+
+.card p {
+    font-size: 14px;
+    margin: 5px 0;
+    color: #666;
+}
+
+.card_a{
+    text-decoration: none;
+}
+.card_a:hover{
+   opacity: 0.6;
+}
+.contact_area{
+    text-align: left;
+    line-height: 2;
+    width: 20%;
+    margin:0 auto;
+}
+.contact_area form textarea{
+    width: 300px;
+    height: 200px;
+    margin-top: 10px;
+}
+.info-flex{
+    width: 50%;
+    margin:5% auto;
+    text-align: left;
+}
+.info-flex h3{
+    border-bottom: dotted 1px gray;
+}
+.info-flex p{
+    padding: 10px;
+    font-size: 16px;
+}
+.info-sub{
+    color: gray;
+    line-height: 0.5;
+    text-align: left;
+    border-top:dotted 1px;
+    border-bottom:dotted 1px;
+}
+textarea.info-control{
+    width: 20%;
+}
+.complete{
+    margin: 50px auto;
+}
+.short-table{
+    margin:0 20%;
+}
+
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
     .btn {
@@ -265,7 +361,18 @@ table td:first-child {
         font-size: 1rem;
         padding: 8px 16px;
     }
-
+    select#company_info.form_control{
+        width: 10px;
+    }
+    .big-btn{
+        width: 60px!important;
+        margin:20px auto;
+    }
+    #craft_name,
+    #company_info{
+        width: 90%;
+        margin:0 auto;
+    }
 }
 
 @media (max-width: 768px) {
@@ -305,6 +412,43 @@ table td:first-child {
     .attendance-item{
         border-bottom: solid 1px black;
         padding: 20px 10px;
+    }
+    .card {
+        width: 100%; /* 1列レイアウト */
+    }
+    .info-flex{
+        width: 85%;
+        margin:10% auto;
+        text-align: left;
+    }
+    .info-flex h3{
+        border-bottom: dotted 1px gray;
+    }
+    .info-flex p{
+        padding: 5px;
+        font-size: 12px;
+    }
+    .info-sub{
+        color: gray;
+        line-height: 0.5;
+        text-align: left;
+        border-top:dotted 1px;
+        border-bottom:dotted 1px;
+    }
+    .contact_area{
+        text-align: left;
+        line-height: 2;
+        width: 80%;
+        margin:0 auto;
+    }
+    .contact_area form textarea{
+        width:100%;
+    }
+    .short-table{
+        margin:0 1%;
+    }
+    .short-table form select{
+        width: 100px;
     }
 }
 

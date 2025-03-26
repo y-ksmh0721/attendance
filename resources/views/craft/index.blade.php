@@ -35,7 +35,7 @@
                             <input type="text" class="form-control" id="craft_name" name="craft_name" value="{{ old('craft_name') }}" required>
                         </td>
                         <td>
-                            <button type="submit" class="btn btn-primary">確認画面へ</button>
+                            <button type="submit" class="btn btn-primary big-btn">確認</button>
                         </td>
                     </tr>
                 </tbody>
@@ -44,7 +44,7 @@
         <br>
     @endif
     <form method="GET" action="{{route('craft.index')}}">
-        <label for="keyword" class="form-label">キーワード検索</label>
+        {{-- <label for="keyword" class="form-label">キーワード検索</label> --}}
         <input type="text" name="keyword" class="form-control" id="keyword" value="{{ old('keyword', request()->get('keyword')) }}" placeholder="名前や会社名を入力">
         <button type="submit" class="btn btn-primary">検索</button>
         <button><a href="{{route('craft.index')}}">解除</a></button>

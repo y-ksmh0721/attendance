@@ -10,6 +10,7 @@ use App\Http\Controllers\CraftController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CsvController;
+use App\Http\Controllers\ContactController;
 
 
 Route::get('/', function () {
@@ -40,7 +41,9 @@ Route::middleware('auth')->group(function () {
     // 出勤情報画面
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendance.list');
-    Route::post('/attendance/confirm', [AttendanceController::class, 'confirm'])->name('attendance.confirm');
+    // Route::post('/attendance/confirm', [AttendanceController::class, 'confirm'])->name('attendance.confirm');
+    Route::match(['get', 'post'], '/attendance/confirm', [AttendanceController::class, 'confirm'])->name('attendance.confirm');
+
     Route::post('/attendance/complete', [AttendanceController::class, 'complete'])->name('attendance.complete');
     Route::get('/attendance/edit{id}', [AttendanceController::class, 'edit'])->name('attendance.edit');
     Route::post('/attendance/update/{id}', [AttendanceController::class, 'update'])->name('attendance.update');
@@ -48,6 +51,7 @@ Route::middleware('auth')->group(function () {
     ->name('attendance.toggleStatus');
     Route::post('/attendance/{id}/toggleOvertime', [AttendanceController::class, 'toggleOvertime'])
     ->name('attendance.toggleOvertime');
+    Route::DELETE('/attendance/destroy{id}', [AttendanceController::class, 'destroy'])->name('attendance.destroy');
 
     // 現場登録画面
     Route::get('/works', [WorkController::class, 'index'])->name('works.index');
@@ -74,6 +78,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/csv', [CsvController::class, 'index'])->name('csv.index');
     Route::get('/csv/download', [CsvController::class, 'download'])->name('csv.download');
 
+    Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+    Route::post('/contact/confirm', [ContactController::class, 'confirm'])->name('contact.confirm');
+    Route::post('/contact/complete', [ContactController::class, 'complete'])->name('contact.complete');
+    Route::get('/contact/list', [ContactController::class, 'list'])->name('contact.list');
+    Route::get('/contact/{id}', [ContactController::class, 'info'])->name('contact.info');
 });
 
 

@@ -59,7 +59,6 @@
                     <label>今日の現場</label>
                     <select class="form-control site-select" name="site[]" required onchange="updateAvailableSites()">
                         <option value="" disabled selected>選択してください</option>
-
                         @foreach ($works as $work)
                             @if ($work->status === 'active')
                                 <option value="{{ $work->name }}">{{ $work->name }}</option>

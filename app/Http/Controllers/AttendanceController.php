@@ -26,40 +26,64 @@ class AttendanceController extends Controller
     public function complete(Request $request){
         $attendance = $request->all();
 
-        // 現場と作業内容が配列で送信される
-        $sites = $attendance['site']; // 現場名の配列
-        $workContents = $attendance['work_content']; // 作業内容の配列
-        $otherWorkContents = $attendance['other_work_content']; // 「その他」の作業内容（テキスト入力）
-        $endTime = $attendance['end_time'];//終了時間の配列
+        // 🔹 同じ人が、同じ日に「終日勤務」として登録されているかチェック
+        $alreadyFullDay = Attendance::where('name', $request->name)
+                    ->where('date', $request->date)
+                    ->where('time_type', '終日') // time_type が「終日」ならブロック
+                    ->exists();
 
-    foreach ($sites as $index => $site) {
-        // 作業内容が「その他」の場合、テキストボックスの内容を使用
-        $workContent = $workContents[$index] == 'その他' ? $otherWorkContents[$index] : $workContents[$index];
-        $timeType = $endTime[$index] < '14:59:59' || count($endTime) > 1 ? '半日' : '終日';
-        $workType = $attendance['work_type'] == '労務' ? '請負' : '外注';
+        // 🔹 新しく登録しようとしているデータの中に「終日勤務」があるかチェック
+        $inputHasFullDay = in_array('終日', $attendance['end_time']);
 
-        // 新しい出勤データを作成
-        $newAtt = new Attendance();
-        $newAtt->name = $attendance['name'];
-        $newAtt->work_type = $workType;
-        $newAtt->date = $attendance['date'];
-        $newAtt->site = $site;
-        $newAtt->work_content = $workContent;
-        $newAtt->end_time = $endTime[$index];
-        $newAtt->time_type = $timeType;
-        $newAtt->write = $request->user_id;
-        $newAtt->save();
+        // 🔹 すでに終日勤務があり、新規のデータにも終日勤務が含まれていたら登録を防ぐ
+        if ($alreadyFullDay || $inputHasFullDay) {
+            return redirect()->route('dashboard');
+        }
+
+        // フォームで送信された配列データ
+        $sites = $attendance['site']; // 現場名
+        $workContents = $attendance['work_content']; // 作業内容
+        $otherWorkContents = $attendance['other_work_content'] ?? []; // 「その他」の作業内容
+        $endTimes = $attendance['end_time']; // 終了時間
+
+        // 🔹 配列の数だけループ
+        foreach ($sites as $index => $site) {
+            // 「作業内容」が「その他」の場合、テキストボックスの値を優先
+            $workContent = ($workContents[$index] == 'その他' && isset($otherWorkContents[$index]))
+                ? $otherWorkContents[$index]
+                : $workContents[$index];
+
+            // 「終日 or 半日」の判定
+            $timeType = ($endTimes[$index] < '14:59:59' || count($endTimes) > 1) ? '半日' : '終日';
+
+            // 労務 or 外注 の変換
+            $workType = ($attendance['work_type'] == '労務') ? '請負' : '外注';
+
+            // 出勤データを作成
+            $newAtt = new Attendance();
+            $newAtt->name = $attendance['name'];
+            $newAtt->work_type = $workType;
+            $newAtt->date = $attendance['date'];
+            $newAtt->site = $site;
+            $newAtt->work_content = $workContent;
+            $newAtt->end_time = $endTimes[$index];
+            $newAtt->time_type = $timeType;
+            $newAtt->write = $request->user_id;
+            $newAtt->save();
+        }
+
+        return view('attendance.complete', compact('attendance'));
     }
 
-    return view('attendance.complete', compact('attendance'));
-}
 
     public function list(Request $request){
         $user = $request->user();
         $userId = $user['id'];
 
         //リレーションにて結合したcraftとcompanyをattendanceテーブルと一緒に持ってくる
-        $attendances = Attendance::with(['craft.company','work.cliant'])->orderby('date','desc');
+        $attendances = Attendance::with(['craft.company','work.cliant'])
+                                    ->orderby('date','desc')
+                                    ->orderby('name','asc');
 
         // フォームで送られてきた値を取得
         $startDate = $request->input('start_date');
@@ -161,5 +185,15 @@ class AttendanceController extends Controller
         ])->save();
 
         return redirect()->route('attendance.list')->with('message', 'Update Complete');
+    }
+
+    public function destroy($id)
+    {
+        // cliantsテーブルから指定のIDのレコード1件を取得
+        $attendance = Attendance::find($id);
+        // レコードを削除
+        $attendance->delete();
+        // 削除したら一覧画面にリダイレクト
+        return redirect()->route('attendance.list');
     }
 }

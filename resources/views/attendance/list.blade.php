@@ -30,6 +30,7 @@
             <th>残業編集</th>
             <th>種別</th>
             <th>編集</th>
+            <th>削除</th>
             @endif
         </tr>
         {{-- {{dd($attendances)}} --}}
@@ -65,6 +66,13 @@
                 @endif
             </td>
             <td><a href="{{route('attendance.edit',['id' => $attendance->id])}}">編集</a></td>
+            <td>
+                <form action="{{ route('attendance.destroy', ['id' => $attendance->id]) }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="button" class="btn btn-danger delete-btn" data-id="{{ $attendance->id }}">削除</button>
+                </form>
+            </td>
             @endif
 
         </tr>
@@ -138,6 +146,7 @@
                     <div class="attendance-actions">
                         <a href="{{route('attendance.edit',['id' => $attendance->id])}}" class="btn btn-warning">編集</a>
                     </div>
+
                 @endif
             </div>
         @endforeach
