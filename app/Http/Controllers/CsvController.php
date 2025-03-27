@@ -99,3 +99,4 @@ class CsvController extends Controller
 // foreach($attendances as $attendance){
 //     $attendance->day_of_week = Carbon::parse($attendance->date)->locale('ja')->isoFormat('ddd');
 // }
+
