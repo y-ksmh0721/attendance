@@ -51,7 +51,7 @@
         </table>
 
         <div class="d-flex justify-content-start">
-            <a href="{{ url()->previous() }}" class="btn btn-secondary me-2">修正する</a>
+            <a href="{{ url()->previous() }}" class="btn btn-secondary me-2">修正</a>
             <button type="submit" class="btn btn-primary">確定</button>
         </div>
     </form>

@@ -32,7 +32,7 @@ class CsvController extends Controller
             ->get();
 
         $csvData = [
-            ['日付', '客先名', '現場名', '作業者名', '時間', '種別', '人数','残業時間','作業内容'] // ヘッダー
+            ['日付', '客先名', '現場名', '作業者名', '時間', '種別', '人数', '残業時間', '作業内容'] // ヘッダー
         ];
 
         // 会社ごとにデータをグループ化（自社以外）
@@ -42,12 +42,11 @@ class CsvController extends Controller
 
         foreach ($attendances as $attendance) {
             if ($attendance->craft->company->name == "Y's tec") {
-                // 自社作業者はそのまま出力
                 $csvData[] = [
                     $attendance->date,
                     $attendance->work->cliant->cliant_name,
                     $attendance->site,
-                    $attendance->name, // 作業者名
+                    $attendance->name,
                     $attendance->time_type,
                     $attendance->work_type,
                     $attendance->time_type === '半日' ? '0.5' : '1',
@@ -57,39 +56,39 @@ class CsvController extends Controller
             }
         }
 
-        // 自社以外の作業者をグループごとに出力
         foreach ($groupedAttendances as $key => $records) {
-            $firstRecord = $records->first(); // グループの最初のデータ
-            $companyName = $firstRecord->craft->company->name; // 会社名を取得
+            $firstRecord = $records->first();
+            $companyName = $firstRecord->craft->company->name;
             $csvData[] = [
                 $firstRecord->date,
                 $firstRecord->work->cliant->cliant_name,
                 $firstRecord->site,
-                $companyName, // 会社名を作業者名の代わりにする
-                $firstRecord->time_type, // 時間（手動入力）
-                $firstRecord->work_type, // 種別（手動入力）
-                $records->count(), // グループ内のレコード数が人数
+                $companyName,
+                $firstRecord->time_type,
+                $firstRecord->work_type,
+                $records->count(),
                 $firstRecord->overtime,
                 $firstRecord->work_content,
             ];
         }
 
-        // CSVを作成
         $filename = "attendance_{$targetDate}.csv";
         ob_start();
         $handle = fopen('php://output', 'w');
+
         foreach ($csvData as $row) {
-            fputcsv($handle, $row);
+            fputcsv($handle, array_map(fn($item) => mb_convert_encoding($item, 'SJIS-win', 'UTF-8'), $row));
         }
+
         fclose($handle);
         $csvContent = ob_get_clean();
 
-        // CSVをダウンロード
         return Response::make($csvContent, 200, [
-            'Content-Type' => 'text/csv',
+            'Content-Type' => 'text/csv; charset=Shift_JIS',
             'Content-Disposition' => "attachment; filename={$filename}",
         ]);
     }
+
 }
 
 // //絞り込んだデータの取得

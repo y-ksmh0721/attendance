@@ -67,7 +67,7 @@
                     <form action="{{ route('works.toggleStatus', $work->id) }}" method="POST">
                         @csrf
                         <button type="submit" class="btn {{ $work->status === 'active' ? 'btn-success' : 'btn-secondary' }}">
-                            {{ $work->status === 'active' ? 'アクティブ' : '非アクティブ' }}
+                            {{ $work->status === 'active' ? '表示' : '非表示' }}
                         </button>
                     </form>
                 </td>
