@@ -25,50 +25,145 @@ class AttendanceController extends Controller
 
     public function complete(Request $request){
         $attendance = $request->all();
+    $date = $request->date;
 
-        // 🔹 同じ人が、同じ日に「終日勤務」として登録されているかチェック
-        $alreadyFullDay = Attendance::where('name', $request->name)
-                    ->where('date', $request->date)
-                    ->where('time_type', '終日') // time_type が「終日」ならブロック
-                    ->exists();
+    foreach ($request->start_time as $index => $startStr) {
+        $startTime = Carbon::parse($startStr); // この時点で $index は定義されている！
 
-        // 🔹 新しく登録しようとしているデータの中に「終日勤務」があるかチェック
-        $inputHasFullDay = in_array('終日', $attendance['end_time']);
+        // 日勤判定（08:00～17:00）
+        if ($startTime->format('H:i') >= '08:00' && $startTime->format('H:i') < '17:00') {
+            $alreadyNikki = Attendance::where('name', $request->name)
+                ->where('date', $date)
+                ->where('time_type', '日勤')
+                ->exists();
 
-        // 🔹 すでに終日勤務があり、新規のデータにも終日勤務が含まれていたら登録を防ぐ
-        if ($alreadyFullDay || $inputHasFullDay) {
-            return redirect()->route('dashboard');
+            if ($alreadyNikki) {
+                return redirect()->route('dashboard')->with('error', 'すでに日勤が登録されています');
+            }
         }
+
+        // 夜勤判定（20:00～翌05:00）
+        if ($startTime->format('H:i') >= '20:00' || $startTime->format('H:i') < '05:00') {
+            $alreadyYakin = Attendance::where('name', $request->name)
+                ->where('date', $date)
+                ->where('time_type', '夜勤')
+                ->exists();
+
+            if ($alreadyYakin) {
+                return redirect()->route('dashboard')->with('error', 'すでに夜勤が登録されています');
+            }
+        }
+    }
+
+
+
+
 
         // フォームで送信された配列データ
         $sites = $attendance['site']; // 現場名
         $workContents = $attendance['work_content']; // 作業内容
         $otherWorkContents = $attendance['other_work_content'] ?? []; // 「その他」の作業内容
+        $startTimes = $attendance['start_time']; // 開始時間
         $endTimes = $attendance['end_time']; // 終了時間
 
-        // 🔹 配列の数だけループ
-        foreach ($sites as $index => $site) {
-            // 「作業内容」が「その他」の場合、テキストボックスの値を優先
-            $workContent = ($workContents[$index] == 'その他' && isset($otherWorkContents[$index]))
-                ? $otherWorkContents[$index]
-                : $workContents[$index];
 
-            // 「終日 or 半日」の判定
-            $timeType = ($endTimes[$index] < '14:59:59' || count($endTimes) > 1) ? '半日' : '終日';
+        // 配列の数だけループ
+        foreach ($sites as $index => $site) {
+
+            //作業開始と終了の時間を取得
+            $start = Carbon::parse($startTimes[$index]);
+            $end = Carbon::parse($endTimes[$index]);
+            if ($end->lessThan($start)) {
+                $end->addDay();
+            }
+
+            //休憩時間を定義
+            $breakStartEvening = Carbon::parse($start->format('Y-m-d') . ' 12:00');
+            $breakEndEvening   = Carbon::parse($start->format('Y-m-d') . ' 13:00');
+            $breakStartNight = Carbon::parse($start->copy()->addDay()->format('Y-m-d') . ' 00:00');
+            $breakEndNight   = Carbon::parse($start->copy()->addDay()->format('Y-m-d') . ' 01:00');
+            // 基準時間をCarbonで定義
+            $eightAM   = Carbon::parse($start->format('Y-m-d') . ' 08:00');
+            $fivePM    = Carbon::parse($start->format('Y-m-d') . ' 17:00');
+            $eightPM   = Carbon::parse($start->format('Y-m-d') . ' 20:00');
+            $fiveAM    = Carbon::parse($start->copy()->addDay()->format('Y-m-d') . ' 05:00');
+
+            //総作業時間（分単位）
+            $workMinutes = $start->diffInMinutes($end);
+            //休憩の被りのチェック
+            if($start < $breakEndEvening && $end > $breakStartEvening){
+                $workMinutes -= $breakStartEvening->diffInMinutes($breakEndEvening);
+            }
+            if($start < $breakEndNight && $end > $breakStartNight){
+                $workMinutes -= $breakStartNight->diffInMinutes($breakEndNight);
+            }
+            //作業時間（少数で保存）
+            $workTime = round($workMinutes / 60 ,2);
+            if($workTime > 8){
+                $workTime = 8.0;
+            }
+            //人役（作業時間 × 0.125）
+            $humanRole = round($workTime*0.125,2);
+
+            //残業時間
+            // 通常残業（17:00以降）
+            $startTime = Carbon::parse($startTimes[$index]);
+            $overtime = 0; // ← 必ず初期化！
+
+            // --- 残業時間計算 ---
+            $standardEnd = Carbon::parse('17:00');
+
+            if ($end > $standardEnd) {
+                // 17:45, 18:45, ...で1時間ごとにカウント
+                $minutes = $standardEnd->diffInMinutes($end);
+                $overtime = floor($minutes / 60); // 1時間単位
+                if ($minutes % 60 >= 45) {
+                    $overtime += 1;
+                }
+            }
+
+            if ($startTime >= $eightAM && $startTime < $fivePM) {
+                $timeType = '日勤';
+            } elseif ($startTime >= $fivePM && $startTime < $eightPM) {
+                $timeType = '残業のみ';
+                $workTime = 0;
+                $humanRole = 0;
+            } elseif ($startTime >= $eightPM || $startTime < $fiveAM) {
+                $timeType = '夜勤';
+                $humanRole = 1;
+                $overtime = 0;
+            } else {
+                $timeType = '不明';
+            }
+            //1日の作業時間が６時間以上の時は人役を１にする
+            // if($workTime >= 6 ){
+
+            // }
+
+
+
+            // 「作業内容」が「その他」の場合、テキストボックスの値を優先
+                $workContent = ($workContents[$index] == 'その他' && isset($otherWorkContents[$index]))
+                    ? $otherWorkContents[$index]
+                    : $workContents[$index];
 
             // 労務 or 外注 の変換
-            $workType = ($attendance['work_type'] == '労務') ? '請負' : '外注';
+                $workType = ($attendance['work_type'] == '労務') ? '請負' : '外注';
 
             // 出勤データを作成
             $newAtt = new Attendance();
-            $newAtt->name = $attendance['name'];
-            $newAtt->work_type = $workType;
-            $newAtt->date = $attendance['date'];
-            $newAtt->site = $site;
-            $newAtt->work_content = $workContent;
-            $newAtt->end_time = $endTimes[$index];
-            $newAtt->time_type = $timeType;
-            $newAtt->write = $request->user_id;
+            $newAtt->name = $attendance['name'];  //名前ok
+            $newAtt->work_type = $workType;       //種別ok
+            $newAtt->date = $attendance['date'];  //日付ok
+            $newAtt->site = $site;               //現場ok
+            $newAtt->work_content = $workContent;//作業内容ok
+            $newAtt->start_time = $startTimes[$index]; //開始時間ok
+            $newAtt->end_time = $endTimes[$index]; //終了時間ok
+            $newAtt->work_time = $workTime;       //作業時間
+            $newAtt->human_role = $humanRole;    //人役
+            $newAtt->time_type = $timeType;      //勤務タイプ
+            $newAtt->overtime = $overtime;          //残業
+            $newAtt->write = $request->user_id; //書き込みユーザーID
             $newAtt->save();
         }
 

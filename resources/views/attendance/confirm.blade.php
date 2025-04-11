@@ -18,33 +18,46 @@
         @endforeach
         <table class="table table-bordered">
             <tr>
-                <th>科目</th>
                 <th>出勤日</th>
-                <th>名前</th>
+                <td>{{ $attendance['date'] }}</td>
             </tr>
             <tr>
-                <td>{{ $attendance['work_type']}}</td>
-                <td>{{ $attendance['date'] }}</td>
+                <th>名前</th>
                 <td>{{ $attendance['name']}}</td>
             </tr>
             <tr>
-                <th>今日の現場</th>
-                <th>作業内容</th>
-                <th>終了時間</th>
+                <th>科目</th>
+                <td>{{ $attendance['work_type']}}</td>
             </tr>
             @foreach ($attendance['site'] as $index => $site)
                 <tr>
-                    <td><!-- 今日の現場 -->
+                    <td>
+                        作業時間
+                    </td>
+                    <td> <!-- 作業時間 -->
+                        {{ $attendance['start_time'][$index]}}
+                        <input type="hidden" name="start_time[]" value="{{$attendance['start_time'][$index]}}">
+                        〜
+                        {{ $attendance['end_time'][$index]}}
+                        <input type="hidden" name="end_time[]" value="{{$attendance['end_time'][$index]}}">
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        現場
+                    </th>
+                    <td>
                         {{ $site }}
                         <input type="hidden" name="site[]" value="{{$site}}">
                     </td>
+                </tr>
+                <tr>
+                    <th>
+                        作業内容
+                    </th>
                     <td> <!-- 作業内容 -->
                         {{ $attendance['work_content'][$index] }}
                         <input type="hidden" name="work_content[]" value="{{$attendance['work_content'][$index]}}">
-                    </td>
-                    <td> <!-- 終了時間 -->
-                        {{ $attendance['end_time'][$index]}}
-                        <input type="hidden" name="end_time[]" value="{{$attendance['end_time'][$index]}}">
                     </td>
                 </tr>
             @endforeach

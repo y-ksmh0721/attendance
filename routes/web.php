@@ -36,6 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/cliant', [CliantController::class, 'list'])->name('cliant.list');
     Route::post('/cliant/confirm', [CliantController::class, 'confirm'])->name('cliant.confirm');
     Route::post('/cliant/complete', [CliantController::class, 'complete'])->name('cliant.complete');
+    Route::get('/cliant/edit{id}', [CliantController::class, 'edit'])->name('cliant.edit');
+    Route::post('/cliant/update/{id}', [CliantController::class, 'update'])->name('cliant.update');
     Route::DELETE('/cliant/destroy{id}', [CliantController::class, 'destroy'])->name('cliant.destroy');
 
     // 出勤情報画面
@@ -57,6 +59,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/works', [WorkController::class, 'index'])->name('works.index');
     Route::post('/works/confirm', [WorkController::class, 'confirm'])->name('works.confirm');
     Route::post('/works/complete', [WorkController::class, 'complete'])->name('works.complete');
+    Route::get('/works/edit{id}', [WorkController::class, 'edit'])->name('works.edit');
+    Route::post('/works/update/{id}', [WorkController::class, 'update'])->name('works.update');
     Route::post('/works/{id}/toggle-status', [WorkController::class, 'toggleStatus'])
     ->name('works.toggleStatus');
     Route::DELETE('/works/destroy{id}', [WorkController::class, 'destroy'])->name('works.destroy');
@@ -65,6 +69,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/craft', [CraftController::class, 'index'])->name('craft.index');
     Route::post('/craft/confirm', [CraftController::class, 'confirm'])->name('craft.confirm');
     Route::post('/craft/complete', [CraftController::class, 'complete'])->name('craft.complete');
+    Route::get('/craft/edit{id}', [CraftController::class, 'edit'])->name('craft.edit');
+    Route::post('/craft/update/{id}', [CraftController::class, 'update'])->name('craft.update');
     Route::post('/craft/{id}/toggle-status', [CraftController::class, 'toggleStatus'])
     ->name('craft.toggleStatus');
     Route::DELETE('/craft/destroy{id}', [CraftController::class, 'destroy'])->name('craft.destroy');
@@ -73,6 +79,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/company', [CompanyController::class, 'list'])->name('company.list');
     Route::post('/company/confirm', [CompanyController::class, 'confirm'])->name('company.confirm');
     Route::post('/company/complete', [CompanyController::class, 'complete'])->name('company.complete');
+    Route::get('/company/edit{id}', [CompanyController::class, 'edit'])->name('company.edit');
+    Route::post('/company/update/{id}', [CompanyController::class, 'update'])->name('company.update');
     Route::DELETE('/company/destroy{id}', [CompanyController::class, 'destroy'])->name('company.destroy');
 
     Route::get('/csv', [CsvController::class, 'index'])->name('csv.index');

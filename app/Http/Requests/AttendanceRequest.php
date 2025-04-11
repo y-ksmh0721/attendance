@@ -24,6 +24,7 @@ class AttendanceRequest extends FormRequest
         return [
             'site' => 'required',
             'work_type' => 'required',
+            'start_time' => 'required',
             'end_time' => 'required',
             'date' => 'required',
             'time_type' => 'required'

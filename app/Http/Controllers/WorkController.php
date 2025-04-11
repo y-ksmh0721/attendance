@@ -16,7 +16,7 @@ class WorkController extends Controller
         $works = Work::with('cliant')
         ->orderByDesc('created_at')
         ->get();
-        
+
         return view('works.index', compact('works','cliants'));
     }
 
@@ -52,6 +52,27 @@ class WorkController extends Controller
 
         return redirect()->back()->with('success', 'ステータスを更新しました。');
     }
+
+    public function edit($id){
+        //リレーションにて結合したcraftとcompanyをattendanceテーブルと一緒に持ってくる
+        $work = Work::all()->findOrFail($id);
+
+       return view('works.edit',compact('work'));
+   }
+
+   public function update(Request $request){
+       //更新処理
+       $work = Work::find($request->id); // id で検索
+       if (!$work) {
+           return response()->json(['error' => 'Record not found'], 404);
+       }
+
+       $work->fill([
+           'name' => $request->work_name
+       ])->save();
+
+       return redirect()->route('works.index')->with('message', 'Update Complete');
+   }
 
     public function destroy($id)
     {

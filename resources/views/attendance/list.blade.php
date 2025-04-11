@@ -20,13 +20,13 @@
     <table class="table table-bordered full-width-table">
         <tr>
             <th>日付</th>
-            <th>客先名</th>
             <th>現場名</th>
             <th>作業者名</th>
             <th>時間</th>
-            <th>終了時間</th>
             <th>残業</th>
+            <th>作業時間</th>
             @if(in_array($user['id'], [1, 2]))
+            <th>人役</th>
             <th>残業編集</th>
             <th>種別</th>
             <th>編集</th>
@@ -38,13 +38,25 @@
         <tr>
             {{-- {{dd($attendance->work->cliant->cliant_name)}} --}}
             <td>{{ $attendance->date }}</td>{{-- 日付 --}}
-            <td>{{ $attendance->work->cliant->cliant_name }}</td>{{-- 客先名 --}}
-            <td>{{ $attendance->work->name }}</td>{{-- 現場名 --}}
+
+            <td><div class="bold">{{ $attendance->work->cliant->cliant_name }}</div>{{ $attendance->work->name }}</td>{{-- 現場名 --}}
             <td>{{ $attendance->name }}</td>{{-- 作業者名 --}}
-            <td>{{ $attendance->time_type}}</td>
-            <td>{{ \Carbon\Carbon::parse($attendance->end_time)->format('H:i') }}</td>{{-- 終了時間 --}}
-            <td>{{ substr($attendance->overtime, 0, 5) }}</td>
+            <td>
+                {{ $attendance->time_type}}<br>
+                {{ \Carbon\Carbon::parse($attendance->start_time)->format('H:i') }}
+                ~
+                {{ \Carbon\Carbon::parse($attendance->end_time)->format('H:i') }}
+            </td>
+            <td>
+                {{ substr($attendance->overtime, 0, 5) }}
+            </td>
+            <td>
+                {{substr($attendance->work_time, 0, 3)}}
+            </td>
             @if(in_array($user['id'], [1, 2]))
+            <td>
+                {{$attendance->human_role}}
+            </td>
             <td>
                 <form action="{{ route('attendance.toggleOvertime', $attendance->id) }}" method="POST">
                 @csrf

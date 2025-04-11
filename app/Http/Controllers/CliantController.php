@@ -30,6 +30,27 @@ class CliantController extends Controller
         // return view('cliant.complete', ['cliant' => $cliant]);
     }
 
+    public function edit($id){
+         //リレーションにて結合したcraftとcompanyをattendanceテーブルと一緒に持ってくる
+         $cliant = cliant::all()->findOrFail($id);
+
+        return view('cliant.edit',compact('cliant'));
+    }
+
+    public function update(CliantRequest $request){
+        //更新処理
+        $cliant = Cliant::find($request->id); // id で検索
+        if (!$cliant) {
+            return response()->json(['error' => 'Record not found'], 404);
+        }
+
+        $cliant->fill([
+            'cliant_name' => $request->cliant_name
+        ])->save();
+
+        return redirect()->route('cliant.list')->with('message', 'Update Complete');
+    }
+
     public function destroy($id)
     {
         // cliantsテーブルから指定のIDのレコード1件を取得

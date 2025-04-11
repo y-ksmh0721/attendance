@@ -30,6 +30,27 @@ class CompanyController extends Controller
         return redirect()->route('company.list');
     }
 
+    public function edit($id){
+        //リレーションにて結合したcraftとcompanyをattendanceテーブルと一緒に持ってくる
+        $company = company::all()->findOrFail($id);
+
+       return view('company.edit',compact('company'));
+   }
+
+   public function update(CompanyRequest $request){
+       //更新処理
+       $company = Company::find($request->id); // id で検索
+       if (!$company) {
+           return response()->json(['error' => 'Record not found'], 404);
+       }
+
+       $company->fill([
+           'name' => $request->company_name
+       ])->save();
+
+       return redirect()->route('company.list')->with('message', 'Update Complete');
+   }
+
     public function destroy($id)
     {
         //cliantsテーブルから指定のIDのレコード1件を取得

@@ -62,9 +62,9 @@
                         @foreach ($works as $work)
                             @if ($work->status === 'active')
                                 <option value="{{ $work->name }}">{{ $work->name }}</option>
-                            @endif
-                        @endforeach
-                    </select>
+                                @endif
+                                @endforeach
+                            </select>
                     <br>
                     <label>作業内容</label>
                         <select class="form-control work-content" name="work_content[]" required onchange="toggleOtherInput(this)">
@@ -81,6 +81,9 @@
                     <input type="text" class="form-control other-work-content" name="other_work_content[]" style="display: none;" placeholder="作業内容を入力">
 
 
+                    <label>開始時間</label>
+                    <input type="time" class="form-control start-time" name="start_time[]" value="08:00" required>
+                    <br>
                     <label>終了時間</label>
                     <input type="time" class="form-control end-time" name="end_time[]" value="17:00" required>
                     <br>
@@ -136,14 +139,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // + ボタンの処理
     document.querySelector(".add-site").addEventListener("click", function () {
+        const lastEndTime = getLastEndTime(); // 最後の終了時間を取得
+
         if (siteContainer.children.length < maxSites) {
             let newSite = siteContainer.children[0].cloneNode(true);
 
-            newSite.querySelector("select[name='site[]']").value = "";
-            newSite.querySelector("select[name='work_content[]']").value = "";
-            newSite.querySelector(".other-work-content").value = "";
-            newSite.querySelector(".other-work-content").style.display = "none";
-            newSite.querySelector(".end-time").value = "17:00"; // 終了時間をリセット
+            // 新しい項目に開始時間を設定
+            newSite.querySelector(".start-time").value = lastEndTime;
+
+            // 新しい項目に終了時間をリセット
+            newSite.querySelector(".end-time").value = "17:00";
 
             // クローンにはプラスボタンを付けない
             let addButton = newSite.querySelector(".add-site");
@@ -164,9 +169,54 @@ document.addEventListener("DOMContentLoaded", function () {
             newSite.appendChild(minusButton);
             siteContainer.appendChild(newSite);
 
+            // 現在追加された終了時間を基に次の項目の開始時間を更新
+            updateStartTimes();
+
             updateAvailableSites();
         }
     });
+
+    // 最後の終了時間を取得する関数
+    function getLastEndTime() {
+        let lastEndTime = "08:00"; // デフォルトの開始時間
+
+        // 最後の終了時間を取得
+        let endTimes = siteContainer.querySelectorAll(".end-time");
+        if (endTimes.length > 0) {
+            let lastTime = endTimes[endTimes.length - 1].value;
+            lastEndTime = lastTime;
+        }
+
+        return lastEndTime;
+    }
+
+    // 終了時間が変更された場合に次の開始時間を自動的に更新
+    siteContainer.addEventListener("change", function(event) {
+        if (event.target.classList.contains("end-time")) {
+            updateStartTimes();
+        }
+    });
+
+    // すべての終了時間を基に開始時間を更新
+    function updateStartTimes() {
+        const sites = siteContainer.querySelectorAll(".site-entry");
+        let previousEndTime = "08:00"; // 最初の開始時間
+
+        sites.forEach((site, index) => {
+            const startTimeInput = site.querySelector(".start-time");
+            const endTimeInput = site.querySelector(".end-time");
+
+            if (startTimeInput && endTimeInput) {
+                // 終了時間が変更されていれば、次の開始時間を設定
+                if (startTimeInput.value === "" || startTimeInput.value === previousEndTime) {
+                    startTimeInput.value = previousEndTime;
+                }
+
+                // 現在の終了時間を次の開始時間として設定
+                previousEndTime = endTimeInput.value;
+            }
+        });
+    }
 
     // 「その他」を選んだときのテキストボックス表示
     window.toggleOtherInput = function(selectElement) {
@@ -180,33 +230,73 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    // 現在選択されている現場をリストから除外する
-    window.updateAvailableSites = function() {
-        let selectedSites = new Set();
-        let siteSelects = document.querySelectorAll("select[name='site[]']");
-
-        siteSelects.forEach(select => {
-            if (select.value) {
-                selectedSites.add(select.value);
-            }
-        });
-
-        siteSelects.forEach(select => {
-            let options = select.querySelectorAll("option");
-            options.forEach(option => {
-                if (option.value && option.value !== "休み") {
-                    option.hidden = selectedSites.has(option.value) && option.value !== select.value;
-                }
-            });
-        });
-    };
-
+    // 現場名の変更を監視して利用できる現場を更新
     document.addEventListener("change", function(event) {
         if (event.target.matches("select[name='site[]']")) {
             updateAvailableSites();
         }
     });
 });
+
+
+// document.addEventListener("DOMContentLoaded", function () {
+//     const maxSites = 5; // 最大5つまで
+//     const siteContainer = document.getElementById("site-container");
+
+//     // + ボタンの処理
+//     document.querySelector(".add-site").addEventListener("click", function () {
+//         if (siteContainer.children.length < maxSites) {
+//             let newSite = siteContainer.children[0].cloneNode(true);
+
+//             newSite.querySelector("select[name='site[]']").value = "";
+//             newSite.querySelector("select[name='work_content[]']").value = "";
+//             newSite.querySelector(".other-work-content").value = "";
+//             newSite.querySelector(".other-work-content").style.display = "none";
+//             newSite.querySelector(".end-time").value = "17:00"; // 終了時間をリセット
+
+//             // クローンにはプラスボタンを付けない
+//             let addButton = newSite.querySelector(".add-site");
+//             if (addButton) {
+//                 addButton.remove();
+//             }
+
+//             // マイナスボタンを追加
+//             let minusButton = document.createElement("button");
+//             minusButton.type = "button";
+//             minusButton.className = "btn btn-danger remove-site";
+//             minusButton.textContent = "−";
+//             minusButton.addEventListener("click", function () {
+//                 this.parentNode.remove();
+//                 updateAvailableSites();
+//             });
+
+//             newSite.appendChild(minusButton);
+//             siteContainer.appendChild(newSite);
+
+//             updateAvailableSites();
+//         }
+//     });
+
+//     // 「その他」を選んだときのテキストボックス表示
+//     window.toggleOtherInput = function(selectElement) {
+//         let otherInput = selectElement.parentNode.querySelector(".other-work-content");
+//         if (selectElement.value === "その他") {
+//             otherInput.style.display = "block";
+//             otherInput.style.width = "100px";
+//             otherInput.style.margin = "0 auto";
+//         } else {
+//             otherInput.style.display = "none";
+//         }
+//     };
+
+
+
+//     document.addEventListener("change", function(event) {
+//         if (event.target.matches("select[name='site[]']")) {
+//             updateAvailableSites();
+//         }
+//     });
+// });
 
 
 

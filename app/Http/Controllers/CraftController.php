@@ -71,6 +71,27 @@ class CraftController extends Controller
         return redirect()->back()->with('success', 'ステータスを更新しました。');
     }
 
+    public function edit($id){
+        //リレーションにて結合したcraftとcompanyをattendanceテーブルと一緒に持ってくる
+        $craft = Craft::all()->findOrFail($id);
+
+       return view('craft.edit',compact('craft'));
+   }
+
+   public function update(Request $request){
+       //更新処理
+       $craft = Craft::find($request->id); // id で検索
+       if (!$craft) {
+           return response()->json(['error' => 'Record not found'], 404);
+       }
+
+       $craft->fill([
+           'name' => $request->craft_name
+       ])->save();
+
+       return redirect()->route('craft.index')->with('message', 'Update Complete');
+   }
+
     public function destroy($id)
     {
         // cliantsテーブルから指定のIDのレコード1件を取得

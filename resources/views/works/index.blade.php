@@ -45,9 +45,10 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>現場名</th>
                 <th>客先名</th>
+                <th>現場名</th>
                 <th>アクティブ</th>
+                <th>編集</th>
                 <th>削除</th>
 
             </tr>
@@ -55,7 +56,6 @@
         <tbody>
             @foreach ($works as $work)
             <tr style="{{ $work->status === 'inactive' ? 'background-color: #919090;' : '' }}">
-                <td>{{ $work->name }}</td>
                 <td>
                     @if($work->cliant)
                         {{ $work->cliant->cliant_name }}
@@ -63,6 +63,7 @@
                         クライアント情報なし
                     @endif
                 </td>
+                <td>{{ $work->name }}</td>
                 <td>
                     <form action="{{ route('works.toggleStatus', $work->id) }}" method="POST">
                         @csrf
@@ -71,6 +72,7 @@
                         </button>
                     </form>
                 </td>
+                <td><a href="{{ route('works.edit', ['id' => $work['id']]) }}">編集</a></td>
                 <td>
                     <form action="{{ route('works.destroy', ['id' => $work['id']]) }}" method="POST">
                         @csrf

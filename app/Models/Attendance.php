@@ -12,12 +12,12 @@ class Attendance extends Model
     use HasFactory;
 
     protected $table = 'attendances';
-    protected $fillable = ['id','date','user_id','work_type', 'site', 'end_time', 'time_type','overtime','write','created_at','updated_at'];
+    protected $fillable = ['id','date','user_id','work_type', 'site', 'work_content','work_time','human_role', 'start_time', 'end_time', 'time_type','overtime','write','created_at','updated_at'];
 
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'id', 'write');
     }
 
     public function work(){

@@ -23,6 +23,7 @@
         <thead>
             <tr>
                 <th>会社名</th>
+                <th>編集</th>
                 <th>削除</th>
             </tr>
         </thead>
@@ -30,6 +31,7 @@
             @foreach ($companys as $company)
             <tr>
                 <td>{{ $company['name'] }}</td>
+                <td><a href="{{route('company.edit',['id' => $company['id']])}}">編集</a></td>
                 <td>
                     <form action="{{ route('company.destroy', ['id' => $company['id']]) }}" method="POST">
                         @csrf

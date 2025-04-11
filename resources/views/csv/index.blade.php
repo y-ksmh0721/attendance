@@ -13,25 +13,31 @@
         <table>
             <tr>
                 <th>日付</th>
-                <th>客先名</th>
-                <th>現場名</th>
-                <th>作業者名</th>
-                <th>時間</th>
-                <th>種別</th>
-                <th>人数</th>
+                <th>客先名<br>現場名</th>
+                <th>所属会社<br>作業者名</th>
+                <th>種別 / 時間</th>
+                <th>作業時間</th>
                 <th>残業時間</th>
+                <th>人役</th>
                 <th>作業内容</th>
             </tr>
             @foreach ($attendances as $attendance)
                 <tr>
                     <td>{{ $attendance->date }}</td>
-                    <td>{{ $attendance->work->cliant->cliant_name }}</td>
-                    <td>{{ $attendance->site }}</td>
-                    <td>{{$attendance->craft->company->name}}<br>{{ $attendance->name }}</td>
-                    <td>{{ $attendance->time_type }}</td>
-                    <td>{{ $attendance->work_type }}</td>
-                    <td>{{ $attendance->time_type == '半日' ? '0.5' : '1' }}</td>
+                    <td>{{ $attendance->work->cliant->cliant_name }}<br>{{ $attendance->site }}</td>
+                    <td>
+                        {{$attendance->craft->company->name}}<br>{{ $attendance->name }}</td>
+                    <td>
+                        {{ $attendance->work_type }} / {{ $attendance->time_type }}<br>
+                        {{ \Carbon\Carbon::parse($attendance->start_time)->format('H:i') }}
+                        ~
+                        {{ \Carbon\Carbon::parse($attendance->end_time)->format('H:i') }}
+                    </td>
+                    <td>{{ $attendance->work_time}}</td>
                     <td>{{ $attendance->overtime }}</td>
+
+
+                    <td>{{ $attendance->human_role }}</td>
                     <td>{{ $attendance->work_content }}</td>
                 </tr>
             @endforeach

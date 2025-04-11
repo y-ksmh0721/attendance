@@ -286,7 +286,10 @@ textarea.info-control{
 .short-table{
     margin:0 20%;
 }
-
+.bold{
+    font-weight: bold;
+    border-bottom: solid 1px;
+}
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
     .btn {
@@ -311,6 +314,13 @@ textarea.info-control{
         padding: 10px;
     }
 }
+/* マイナスボタンの色を赤に設定 */
+.remove-site {
+    background-color: red !important;
+    color: white !important;
+    border: none !important;
+}
+
 
 @media (max-width: 480px) {
     body {
