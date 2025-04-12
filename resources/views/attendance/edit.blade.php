@@ -7,7 +7,11 @@
     <h2>出勤者情報</h2>
     <p>出勤者名：{{$attendance->name}}</p>
     <p>日付：{{$attendance->date}}/{{$attendance->day_of_week}}曜日</p>
-
+    @if($attendance->user->name)
+    <p>記録者：{{$attendance->user->name}}</p>
+    @else
+        情報がありません
+    @endif
     <div class="short-table">
         <form action="{{route('attendance.update',['id'=>$attendance->id])}}" method="POST">
             @csrf
@@ -53,14 +57,13 @@
                 </tr>
                 <tr>
                     <td>現場名</td>
-                    <td>{{$attendance->site}}</td>
+                    <td>{{$attendance->work->name}}</td>
                     <td>
                         <select class="form-control" id="morning_site" name="site" required>
                             <option value="" disabled {{ old('site') == '' ? 'selected' : '' }}>選択してください</option>
-                            <option value="休み" {{ old('site', $attendance->site) == '休み' ? 'selected' : '' }}>休み</option>
                             @foreach ($works as $work)
                                 @if ($work->status === 'active')
-                                    <option value="{{ $work->name }}" {{ old('site', $attendance->site) == $work->name ? 'selected' : '' }}>
+                                    <option value="{{ $work->name }}" {{ old('site', $attendance->work->name) == $work->name ? 'selected' : '' }}>
                                         {{ $work->name }}
                                     </option>
                                 @endif

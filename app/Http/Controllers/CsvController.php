@@ -32,26 +32,27 @@ class CsvController extends Controller
             ->get();
 
         $csvData = [
-            ['日付', '客先名', '現場名', '作業者名', '時間', '種別', '人数', '残業時間', '作業内容'] // ヘッダー
+            ['日付', '客先名', '現場名', '作業者名', '時間', '種別', '人数', '残業時間', '作業内容','人役'] // ヘッダー
         ];
 
         // 会社ごとにデータをグループ化（自社以外）
         $groupedAttendances = $attendances
             ->reject(fn($att) => $att->craft->company->name == "Y's tec")
-            ->groupBy(fn($att) => $att->date . '_' . $att->site . '_' . $att->craft->company->name);
+            ->groupBy(fn($att) => $att->date . '_' . $att->work->name . '_' . $att->craft->company->name);
 
         foreach ($attendances as $attendance) {
             if ($attendance->craft->company->name == "Y's tec") {
                 $csvData[] = [
                     $attendance->date,
                     $attendance->work->cliant->cliant_name,
-                    $attendance->site,
+                    $attendance->work->name,
                     $attendance->name,
                     $attendance->time_type,
                     $attendance->work_type,
                     $attendance->time_type === '半日' ? '0.5' : '1',
                     $attendance->overtime,
                     $attendance->work_content,
+                    $attendance->human_role,
                 ];
             }
         }
@@ -62,13 +63,14 @@ class CsvController extends Controller
             $csvData[] = [
                 $firstRecord->date,
                 $firstRecord->work->cliant->cliant_name,
-                $firstRecord->site,
+                $firstRecord->work->name,
                 $companyName,
                 $firstRecord->time_type,
                 $firstRecord->work_type,
                 $records->count(),
-                $firstRecord->overtime,
+                $records->sum('overtime'),
                 $firstRecord->work_content,
+                $records->sum('human_role'),
             ];
         }
 

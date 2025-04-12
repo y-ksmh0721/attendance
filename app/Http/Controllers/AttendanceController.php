@@ -17,58 +17,77 @@ class AttendanceController extends Controller
         $user = $request->user();
         // $attendance = (object) $request->all();
         $attendance = $request->all();
+
         return view('attendance.confirm',[
             'attendance' => $attendance,
-            'user' => $user
+            'user' => $user,
         ]);
     }
 
     public function complete(Request $request){
         $attendance = $request->all();
-    $date = $request->date;
+        $date = $request->date;
+        foreach ($request->start_time as $index => $startStr) {
+            $startTime = Carbon::parse($startStr); // この時点で $index は定義されている！
 
-    foreach ($request->start_time as $index => $startStr) {
-        $startTime = Carbon::parse($startStr); // この時点で $index は定義されている！
+            // 日勤判定（08:00～17:00）
+            if ($startTime->format('H:i') >= '08:00' && $startTime->format('H:i') < '17:00') {
+                $alreadyNikki = Attendance::where('name', $request->name)
+                    ->where('date', $date)
+                    ->where('time_type', '日勤')
+                    ->exists();
 
-        // 日勤判定（08:00～17:00）
-        if ($startTime->format('H:i') >= '08:00' && $startTime->format('H:i') < '17:00') {
-            $alreadyNikki = Attendance::where('name', $request->name)
-                ->where('date', $date)
-                ->where('time_type', '日勤')
-                ->exists();
+                if ($alreadyNikki) {
+                    return redirect()->route('dashboard')->with('error', 'すでに日勤が登録されています');
+                }
+            }
 
-            if ($alreadyNikki) {
-                return redirect()->route('dashboard')->with('error', 'すでに日勤が登録されています');
+            // 夜勤判定（20:00～翌05:00）
+            if ($startTime->format('H:i') >= '20:00' || $startTime->format('H:i') < '05:00') {
+                $alreadyYakin = Attendance::where('name', $request->name)
+                    ->where('date', $date)
+                    ->where('time_type', '夜勤')
+                    ->exists();
+
+                if ($alreadyYakin) {
+                    return redirect()->route('dashboard')->with('error', 'すでに夜勤が登録されています');
+                }
+            }
+
+            // 残業のみ（20:00～翌05:00）
+            if ($startTime->format('H:i') >= '17:00' || $startTime->format('H:i') < '20:00') {
+                $alreadyOver = Attendance::where('name', $request->name)
+                    ->where('date', $date)
+                    ->where('time_type', '残業のみ')
+                    ->exists();
+
+                if ($alreadyOver) {
+                    return redirect()->route('dashboard')->with('error', 'すでに夜勤が登録されています');
+                }
             }
         }
-
-        // 夜勤判定（20:00～翌05:00）
-        if ($startTime->format('H:i') >= '20:00' || $startTime->format('H:i') < '05:00') {
-            $alreadyYakin = Attendance::where('name', $request->name)
-                ->where('date', $date)
-                ->where('time_type', '夜勤')
-                ->exists();
-
-            if ($alreadyYakin) {
-                return redirect()->route('dashboard')->with('error', 'すでに夜勤が登録されています');
-            }
-        }
-    }
-
 
 
 
 
         // フォームで送信された配列データ
-        $sites = $attendance['site']; // 現場名
+        // $sites = $attendance['site']; // 現場名
         $workContents = $attendance['work_content']; // 作業内容
         $otherWorkContents = $attendance['other_work_content'] ?? []; // 「その他」の作業内容
         $startTimes = $attendance['start_time']; // 開始時間
         $endTimes = $attendance['end_time']; // 終了時間
+        $siteIds = [];
+
+        foreach ($attendance['site'] as $siteJson) {
+            $siteData = json_decode($siteJson, true); // 連想配列に変換
+            if (isset($siteData['id'])) {
+                $siteIds[] = $siteData['id']; // IDだけ配列に入れる
+            }
+        }
 
 
         // 配列の数だけループ
-        foreach ($sites as $index => $site) {
+        foreach ($siteIds as $index => $site) {
 
             //作業開始と終了の時間を取得
             $start = Carbon::parse($startTimes[$index]);
@@ -135,12 +154,6 @@ class AttendanceController extends Controller
             } else {
                 $timeType = '不明';
             }
-            //1日の作業時間が６時間以上の時は人役を１にする
-            // if($workTime >= 6 ){
-
-            // }
-
-
 
             // 「作業内容」が「その他」の場合、テキストボックスの値を優先
                 $workContent = ($workContents[$index] == 'その他' && isset($otherWorkContents[$index]))
@@ -150,12 +163,13 @@ class AttendanceController extends Controller
             // 労務 or 外注 の変換
                 $workType = ($attendance['work_type'] == '労務') ? '請負' : '外注';
 
+
             // 出勤データを作成
             $newAtt = new Attendance();
             $newAtt->name = $attendance['name'];  //名前ok
             $newAtt->work_type = $workType;       //種別ok
             $newAtt->date = $attendance['date'];  //日付ok
-            $newAtt->site = $site;               //現場ok
+            $newAtt->site_id = $site;               //現場ok
             $newAtt->work_content = $workContent;//作業内容ok
             $newAtt->start_time = $startTimes[$index]; //開始時間ok
             $newAtt->end_time = $endTimes[$index]; //終了時間ok
@@ -194,11 +208,14 @@ class AttendanceController extends Controller
             $attendances = $attendances->where('date', '<=', $endDate);
         }
 
+
         //キーワード検索処理
         if($keyword){
             $attendances = $attendances->where(function($query) use ($keyword){
                 $query->where('name', 'like', "%$keyword%")
-                        ->orwhere('site', 'like', "%$keyword%")
+                        ->orwhereHas('work', function($query) use ($keyword){
+                            $query->where('name', 'like', "%$keyword%");
+                        })
                         ->orWhereHas('work.cliant', function($query) use ($keyword){
                             $query->where('cliant_name', 'like', "%$keyword%");
                         })
@@ -256,7 +273,7 @@ class AttendanceController extends Controller
         // `works` テーブルのデータを取得
         $works = Work::all();
          //リレーションにて結合したcraftとcompanyをattendanceテーブルと一緒に持ってくる
-         $attendance = Attendance::with(['craft.company'])->findOrFail($id);
+         $attendance = Attendance::with(['craft.company','user'])->findOrFail($id);
 
         return view('attendance.edit',compact('attendance','works'));
     }
@@ -267,16 +284,19 @@ class AttendanceController extends Controller
         if (!$attendance) {
             return response()->json(['error' => 'Record not found'], 404);
         }
-
-        // dd($request->work_type);
+        $site = Work::where('name', $request->site)->get();
+        $siteId = $site->first()->id;
 
         $attendance->fill([
             'name' => $request->name,
             'date' => $request->date,
-            'site' => $request->site,
+            'site_id' => $siteId,
+            'start_time'=> $request->start_time,
             'end_time'=> $request->end_time,
+            'work_time' => $request->work_time,
             'work_type' => $request->work_type,
             'time_type' => $request->time_type,
+            'human_role' => $request->human_role
         ])->save();
 
         return redirect()->route('attendance.list')->with('message', 'Update Complete');

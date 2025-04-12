@@ -30,37 +30,37 @@
                 <td>{{ $attendance['work_type']}}</td>
             </tr>
             @foreach ($attendance['site'] as $index => $site)
-                <tr>
-                    <td>
-                        作業時間
-                    </td>
-                    <td> <!-- 作業時間 -->
-                        {{ $attendance['start_time'][$index]}}
-                        <input type="hidden" name="start_time[]" value="{{$attendance['start_time'][$index]}}">
-                        〜
-                        {{ $attendance['end_time'][$index]}}
-                        <input type="hidden" name="end_time[]" value="{{$attendance['end_time'][$index]}}">
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        現場
-                    </th>
-                    <td>
-                        {{ $site }}
-                        <input type="hidden" name="site[]" value="{{$site}}">
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        作業内容
-                    </th>
-                    <td> <!-- 作業内容 -->
-                        {{ $attendance['work_content'][$index] }}
-                        <input type="hidden" name="work_content[]" value="{{$attendance['work_content'][$index]}}">
-                    </td>
-                </tr>
-            @endforeach
+            @php
+                $siteObj = json_decode($site); // ここでJSON文字列をオブジェクトに変換
+            @endphp
+
+            <tr>
+                <td>
+                    作業時間
+                </td>
+                <td>
+                    {{ $attendance['start_time'][$index] }}
+                    <input type="hidden" name="start_time[]" value="{{ $attendance['start_time'][$index] }}">
+                    〜
+                    {{ $attendance['end_time'][$index] }}
+                    <input type="hidden" name="end_time[]" value="{{ $attendance['end_time'][$index] }}">
+                </td>
+            </tr>
+            <tr>
+                <th>現場</th>
+                <td>
+                    {{ $siteObj->name ?? '不明な現場' }}
+                    <input type="hidden" name="site[]" value="{{ $site }}">
+                </td>
+            </tr>
+            <tr>
+                <th>作業内容</th>
+                <td>
+                    {{ $attendance['work_content'][$index] }}
+                    <input type="hidden" name="work_content[]" value="{{ $attendance['work_content'][$index] }}">
+                </td>
+            </tr>
+        @endforeach
         </table>
 
         <div class="d-flex justify-content-start">

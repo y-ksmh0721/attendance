@@ -24,7 +24,7 @@
             @foreach ($attendances as $attendance)
                 <tr>
                     <td>{{ $attendance->date }}</td>
-                    <td>{{ $attendance->work->cliant->cliant_name }}<br>{{ $attendance->site }}</td>
+                    <td>{{ $attendance->work->cliant->cliant_name }}<br>{{ $attendance->work->name }}</td>
                     <td>
                         {{$attendance->craft->company->name}}<br>{{ $attendance->name }}</td>
                     <td>

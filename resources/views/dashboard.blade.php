@@ -61,10 +61,10 @@
                         <option value="" disabled selected>選択してください</option>
                         @foreach ($works as $work)
                             @if ($work->status === 'active')
-                                <option value="{{ $work->name }}">{{ $work->name }}</option>
-                                @endif
-                                @endforeach
-                            </select>
+                                <option value="{{ $work }}">{{ $work->name }}</option>
+                            @endif
+                        @endforeach
+                    </select>
                     <br>
                     <label>作業内容</label>
                         <select class="form-control work-content" name="work_content[]" required onchange="toggleOtherInput(this)">

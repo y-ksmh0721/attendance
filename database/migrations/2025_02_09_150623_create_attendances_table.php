@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('name',255);                      //名前
             $table->string('work_type',255);                 //種別
             $table->date('date');                            // 出勤日
-            // $table->unsignedBigInteger('site_id');          //worksテーブルのid
-            $table->string('site', 255);                     // 現場名
+            $table->unsignedBigInteger('site_id');          //worksテーブルのid
+            // $table->string('site', 255);                     // 現場名
             $table->string('work_content', 255)->nullable(); // 作業内容
             $table->time('start_time')->default('00:00:00'); //開始時間
             $table->time('end_time')->default('00:00:00');   //終了時間
