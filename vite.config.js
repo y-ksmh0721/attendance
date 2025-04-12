@@ -8,4 +8,13 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    server: {
+        https: true,  // HTTPSで開発サーバーを立ち上げる
+        host: '0.0.0.0',  // 任意のホストからアクセスできるようにする（ローカルネットワークからもアクセス可能）
+        hmr: {
+            protocol: 'wss',  // HMRはWebSocket Secure（wss）を使用
+            host: 'localhost',  // 必要に応じて適切なホストを設定
+        },
+    },
 });
+
