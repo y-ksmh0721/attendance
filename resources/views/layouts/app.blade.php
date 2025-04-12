@@ -11,7 +11,6 @@
     <header>
         <h1>Y's TEC</h1>
         <a class="hd-menu" href="{{route('dashboard')}}">出勤管理</a>
-        <a class="hd-menu" href="{{route('attendance.list')}}">出勤一覧</a>
         <a class="hd-menu" href="{{route('contact.list')}}">共有事項</a>
     </header>
 

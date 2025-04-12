@@ -14,8 +14,12 @@
                 <td><a href="{{route('cliant.list')}}">客先登録</a></td>
             </tr>
             <tr>
-                <td><a href="{{route('craft.index')}}">職人登録</a></td>
+                <td><a href="{{route('craft.index')}}">作業員登録</a></td>
                 <td><a href="{{route('works.index')}}">現場登録</a></td>
+            </tr>
+            <tr>
+                <td><a href="{{route('user.list')}}">ログイン管理</a></td>
+                <td></td>
             </tr>
         </table>
     </div>

@@ -5,14 +5,16 @@
 @section('content')
     {{-- ここからbody --}}
     <div class="container">
+        <div class="surf-box">
+            @if(in_array($user['permission'], [1, 2]))
+                <a href="{{ route('attendance.list') }}">出勤一覧</a>
+                <a href="{{ route('craft.index') }}">作業員操作</a>
+            @endif
 
-        @if(in_array($user['id'], [1, 2,]))
-            <a class="" href="{{route('management.management')}}">情報登録</a>
-            <a class="" href="{{route('csv.index')}}">CSV画面</a>
-        @endif
-        @if(in_array($user['id'], [1,2,3]))
-            <a class="" href="{{route('craft.index')}}">職人操作</a>
-        @endif
+            @if(in_array($user['permission'], [2]))
+                <a href="{{ route('management.management') }}">情報登録</a>
+            @endif
+        </div>
         <h2 class="mb-4">出勤管理</h2>
         {{-- エラー文 --}}
         @if ($errors->any())

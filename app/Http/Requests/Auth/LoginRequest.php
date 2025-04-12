@@ -41,16 +41,32 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
+        // 🔽 最初にユーザー取得
+        $user = \App\Models\User::where('email', $this->email)->first();
 
-            throw ValidationException::withMessages([
+        // 🔴 ユーザーがいない、または許可されてないなら弾く
+        if (! $user || $user->is_allowed === false) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'email' => __('このアカウントは現在ログインできません。'),
+            ]);
+        }
+
+        // 🔽 パスワード認証を実行
+        if (! \Illuminate\Support\Facades\Auth::attempt(
+            $this->only('email', 'password'),
+            $this->boolean('remember')
+        )) {
+            \Illuminate\Support\Facades\RateLimiter::hit($this->throttleKey());
+
+            throw \Illuminate\Validation\ValidationException::withMessages([
                 'email' => trans('auth.failed'),
             ]);
         }
 
-        RateLimiter::clear($this->throttleKey());
+
+        \Illuminate\Support\Facades\RateLimiter::clear($this->throttleKey());
     }
+
 
     /**
      * Ensure the login request is not rate limited.

@@ -16,6 +16,9 @@
         <input type="text" name="keyword" class="form-control" id="keyword" value="{{ old('keyword', request()->get('keyword')) }}" placeholder="名前や現場名を入力">
         <button type="submit" class="btn btn-primary">検索</button>
         <button><a href="{{route('attendance.list')}}">解除</a></button>
+        @if(in_array($user['permission'], [2]))
+        <button><a href="{{route('csv.index')}}">CSVダウンロード</a></button>
+        @endif
     </form>
     <table class="table table-bordered full-width-table">
         <tr>
@@ -25,7 +28,7 @@
             <th>時間</th>
             <th>残業</th>
             <th>作業時間</th>
-            @if(in_array($user['id'], [1, 2]))
+            @if(in_array($user['permission'], [2]))
             <th>人役</th>
             <th>残業編集</th>
             <th>種別</th>
@@ -53,7 +56,7 @@
             <td>
                 {{substr($attendance->work_time, 0, 3)}}
             </td>
-            @if(in_array($user['id'], [1, 2]))
+            @if(in_array($user['permission'], [2]))
             <td>
                 {{$attendance->human_role}}
             </td>
@@ -135,7 +138,7 @@
                         {{ substr($attendance->overtime, 0, 5) }}
                     </span>
                 </div>
-                @if(in_array($user['id'], [1, 2]))
+                @if(in_array($user['permission'], [2]))
                     <div class="attendance-actions">
                         <form action="{{ route('attendance.toggleOvertime', $attendance->id) }}" method="POST">
                             @csrf

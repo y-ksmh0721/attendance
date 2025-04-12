@@ -55,7 +55,7 @@
                 <th>所属</th>
                 <th>職人名</th>
                 <th>アクティブ</th>
-                @if(in_array($user['id'], [1, 2,]))
+                @if(in_array($user['permission'], [2]))
                 <th>編集</th>
                 <th>削除</th>
                 @endif
@@ -80,7 +80,7 @@
                                 </button>
                             </form>
                         </td>
-                        @if(in_array($user['id'], [1, 2]))
+                        @if(in_array($user['permission'], [2]))
                             <td><a href="{{ route('craft.edit', ['id' => $record->id]) }}">編集</a></td>
                             <td>
                                 <form action="{{ route('craft.destroy', ['id' => $record->id]) }}" method="POST">

@@ -11,6 +11,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CsvController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\UserController;
 
 
 Route::get('/', function () {
@@ -91,6 +92,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/contact/complete', [ContactController::class, 'complete'])->name('contact.complete');
     Route::get('/contact/list', [ContactController::class, 'list'])->name('contact.list');
     Route::get('/contact/{id}', [ContactController::class, 'info'])->name('contact.info');
+
+    Route::get('/user', [UserController::class, 'list'])->name('user.list');
+    Route::post('/user/toggle/{user}', [UserController::class, 'toggle'])->name('user.toggle');
 });
 
 
