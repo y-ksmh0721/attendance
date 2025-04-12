@@ -1,34 +1,4 @@
-/* body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #f8f9fa;
-    margin: 0;
-    padding: 0;
-}
-header {
-    background-color: #333;
-    color: white;
-    padding: 10px;
-}
-
-.container {
-    margin-top: 50px;
-}
-.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    margin: 10px;
-}
-.btn:hover {
-    background-color: #0056b3;
-} */
+/* おそらく本番 */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
@@ -316,6 +286,25 @@ textarea.info-control{
 }
 .short-table{
     margin:0 20%;
+}
+.surf-box {
+    display: flex;
+    justify-content: center;
+    gap: 2rem; /* 各リンクの間隔 */
+    padding: 1rem 0;
+    background-color: #f3f4f6; /* 薄いグレー */
+    border-radius: 0.5rem;
+}
+
+.surf-box a {
+    color: #2563eb; /* 青 */
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.surf-box a:hover {
+    color: #1e40af; /* 濃い青（ホバー時） */
 }
 
 /* レスポンシブ対応 */
