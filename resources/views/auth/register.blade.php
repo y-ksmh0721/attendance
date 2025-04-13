@@ -43,7 +43,7 @@
             <div class="mt-1">
                 <label>
                     <input type="radio" name="role" value="0" {{ old('role') == '2' ? 'checked' : '' }}>
-                    全権限あり
+                    権限なし
                 </label><br>
                 <label>
                     <input type="radio" name="role" value="1" {{ old('role') == '1' ? 'checked' : '' }}>
@@ -51,7 +51,7 @@
                 </label><br>
                 <label>
                     <input type="radio" name="role" value="2" {{ old('role', '2') == '0' ? 'checked' : '' }}>
-                    権限なし
+                    全権限あり
                 </label>
             </div>
         </div>

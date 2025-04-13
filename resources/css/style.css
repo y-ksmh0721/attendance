@@ -287,25 +287,6 @@ textarea.info-control{
 .short-table{
     margin:0 20%;
 }
-.surf-box {
-    display: flex;
-    justify-content: center;
-    gap: 2rem; /* 各リンクの間隔 */
-    padding: 1rem 0;
-    background-color: #f3f4f6; /* 薄いグレー */
-    border-radius: 0.5rem;
-}
-
-.surf-box a {
-    color: #2563eb; /* 青 */
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.2s ease;
-}
-
-.surf-box a:hover {
-    color: #1e40af; /* 濃い青（ホバー時） */
-}
 
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
