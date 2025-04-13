@@ -11,10 +11,12 @@
     <link rel="stylesheet" href="{{ asset('build/assets/style-C717Te9p.css') }}">
     <script src="{{ asset('build/assets/app-CIfNNPVJ.js') }}" defer></script> --}}
     @if (app()->environment('local'))
-    @vite(['resources/css/style.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    @vite(['resources/js/app.js'])
     @else
-        <link rel="stylesheet" href="{{ asset('build/assets/style-sIrnz_Ww.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('build/assets/app-D8DX__xd.css') }}">
+        <link rel="stylesheet" href="{{ asset('build/assets/style-sIrnz_Ww.css') }}">
         <script src="{{ asset('build/assets/app-D-SzzJQe.js') }}" defer></script>
     @endif
 </head>
