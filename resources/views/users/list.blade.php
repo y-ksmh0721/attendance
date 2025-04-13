@@ -18,7 +18,15 @@
             <tr>
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
-                <td>{{ $user->permission }}</td>
+                <td>
+                    @if($user->permission === 2)
+                        全権限
+                    @elseif($user->permission === 1)
+                        一部権限
+                    @elseif($user->permission === 0)
+                        権限なし
+                    @endif
+                </td>
                 <td>{{ $user->is_allowed ? '許可' : '拒否' }}</td>
                 <td>
                     {{-- <form action=""> --}}
