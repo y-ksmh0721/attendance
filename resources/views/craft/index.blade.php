@@ -7,7 +7,7 @@
     <h2 class="mb-4">職人登録画面</h2>
 
     <!-- 職人登録フォーム -->
-    @if(in_array($user['id'], [1, 2,]))
+    @if(in_array($user['permission'], [2]))
         <form action="{{route('craft.confirm')}}" method="post">
             @csrf
             <table class="table table-bordered">
