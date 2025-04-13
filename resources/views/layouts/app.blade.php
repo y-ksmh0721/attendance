@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', '出勤管理')</title>
     {{-- 開発用 --}}
-    @vite(['resources/css/style.css', 'resources/js/app.js'])
+    {{-- @vite(['resources/css/style.css', 'resources/js/app.js']) --}}
     {{-- 本番用 --}}
     {{-- <link rel="stylesheet" href="{{ asset('build/assets/app-CSIfVw45.css') }}">
     <link rel="stylesheet" href="{{ asset('build/assets/style-C717Te9p.css') }}">
     <script src="{{ asset('build/assets/app-CIfNNPVJ.js') }}" defer></script> --}}
+    @if (app()->environment('local'))
+    @vite(['resources/css/style.css', 'resources/js/app.js'])
+        @else
+            <link rel="stylesheet" href="{{ asset('build/assets/style-C717Te9p.css') }}">
+            <link rel="stylesheet" href="{{ asset('build/assets/app-D8DX__xd.css') }}">
+            <script src="{{ asset('build/assets/app-CIfNNPVJ.js') }}" defer></script>
+        @endif
 </head>
 <body>
     <header>
