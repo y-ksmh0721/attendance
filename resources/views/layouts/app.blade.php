@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', '出勤管理')</title>
-    {{-- <link rel="stylesheet" href="{{ asset('css/style.css') }}"> --}}
-    @vite(['resources/css/style.css', 'resources/js/app.js'])
+    {{-- 開発用 --}}
+    {{-- @vite(['resources/css/style.css', 'resources/js/app.js']) --}}
+    {{-- 本番用 --}}
+    <link rel="stylesheet" href="{{ asset('build/assets/app-CSIfVw45.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/assets/style-C717Te9p.css') }}">
+    <script src="{{ asset('build/assets/app-CIfNNPVJ.js') }}" defer></script>
 </head>
 <body>
     <header>
