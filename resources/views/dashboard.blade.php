@@ -55,6 +55,8 @@
                     <input type="checkbox" name="work_type" value="外注" onclick="toggleCheckbox(this)"> 外注
                 </label>
                 <br>
+                <label style="font-size:15px;color:red;font-weight:bold;">”時間”は30分刻みで入力してください</label>
+                <br>
             <!-- 今日の現場（複数追加対応） -->
             <div id="site-container">
                 <div class="site-group">
@@ -82,12 +84,11 @@
 
                     <input type="text" class="form-control other-work-content" name="other_work_content[]" style="display: none;" placeholder="作業内容を入力">
 
-
                     <label>開始時間</label>
-                    <input type="time" class="form-control start-time" name="start_time[]" value="08:00" step="900" required>
+                    <input type="time" class="form-control start-time" name="start_time[]" value="08:00" step="1800" required>
                     <br>
                     <label>終了時間</label>
-                    <input type="time" class="form-control end-time" name="end_time[]" value="17:00" step="900" required>
+                    <input type="time" class="form-control end-time" name="end_time[]" value="17:00" step="1800" required>
                     <br>
 
                     <button type="button" class="btn btn-success add-site">+</button>
