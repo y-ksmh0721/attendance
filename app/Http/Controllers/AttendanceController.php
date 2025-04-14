@@ -107,13 +107,20 @@ class AttendanceController extends Controller
             $eightPM   = Carbon::parse($start->format('Y-m-d') . ' 20:00');
             $fiveAM    = Carbon::parse($start->copy()->addDay()->format('Y-m-d') . ' 05:00');
 
+
+            // 追加：17:00で作業終了とする制限時間を定義
+            $endLimit = Carbon::parse($start->format('Y-m-d') . ' 17:00');
+
+            // 作業終了時間を17時以降なら17時に制限
+            $adjustedEnd = $end->greaterThan($endLimit) ? $endLimit : $end;
+
             //総作業時間（分単位）
-            $workMinutes = $start->diffInMinutes($end);
+            $workMinutes = $start->diffInMinutes($adjustedEnd);
             //休憩の被りのチェック
-            if($start < $breakEndEvening && $end > $breakStartEvening){
+            if($start < $breakEndEvening && $adjustedEnd > $breakStartEvening){
                 $workMinutes -= $breakStartEvening->diffInMinutes($breakEndEvening);
             }
-            if($start < $breakEndNight && $end > $breakStartNight){
+            if($start < $breakEndNight && $adjustedEnd > $breakStartNight){
                 $workMinutes -= $breakStartNight->diffInMinutes($breakEndNight);
             }
             //作業時間（少数で保存）
@@ -121,8 +128,10 @@ class AttendanceController extends Controller
             if($workTime > 8){
                 $workTime = 8.0;
             }
+
             //人役（作業時間 × 0.125）
-            $humanRole = round($workTime*0.125,2);
+            $humanRole = round($workTime*0.125,4);
+            // dd($humanRole);
 
             //残業時間
             // 通常残業（17:00以降）

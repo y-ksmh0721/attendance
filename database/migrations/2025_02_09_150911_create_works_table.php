@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('works', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('cliant_id'); 
+            $table->unsignedBigInteger('cliant_id');
             $table->string('name', 255);
             $table->enum('status',['active','inactive'])->default('active');
             $table->timestamps();

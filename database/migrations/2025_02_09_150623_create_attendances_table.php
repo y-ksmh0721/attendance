@@ -24,7 +24,7 @@ return new class extends Migration
             $table->decimal('work_time', 4, 2)
                     ->default(0)
                     ->check('work_time >= 0 AND work_time <= 24 AND work_time = FLOOR(work_time)'); // 作業時間
-            $table->decimal('human_role', 4, 2)->default(0);     //人役
+            $table->decimal('human_role', 5, 4)->default(0);     //人役
             $table->string('time_type')->default('終日');     //時間
             $table->decimal('overtime', 4, 1)->default(0);   // 残業時間（小数対応）
             $table->string('write',255);                     //書き込みアカウントID

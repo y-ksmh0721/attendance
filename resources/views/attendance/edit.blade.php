@@ -107,11 +107,15 @@
                     <td>
                         <select class="form-control" id="human_role" name="human_role" required>
                             <option value="" disabled {{ old('human_role') == '' ? 'selected' : '' }}>選択してください</option>
-                            @for ($i = 0; $i <= 100; $i++) <!-- 0から800までループして、0.01刻みで表示 -->
-                                <option value="{{ number_format($i * 0.01, 2) }}" {{ old('human_role', $attendance->human_role) == number_format($i * 0.01, 2) ? 'selected' : '' }}>
-                                    {{ number_format($i * 0.01, 2) }} <!-- 表示を0.00, 0.01, 0.02, ... 8.00 -->
-                                </option>
-                            @endfor
+                            @for ($i = 0; $i <= 10000; $i++) {{-- 0から0.1000までを0.0001刻み --}}
+                            @php
+                                $value = number_format($i * 0.0001, 4, '.', '');
+                            @endphp
+                            <option value="{{ $value }}" {{ old('human_role', $attendance->human_role) == $value ? 'selected' : '' }}>
+                                {{ $value }}
+                            </option>
+                        @endfor
+
                         </select>
 
                     </td>

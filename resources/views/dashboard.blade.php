@@ -58,7 +58,7 @@
             <!-- 今日の現場（複数追加対応） -->
             <div id="site-container">
                 <div class="site-group">
-                    <label>今日の現場</label>
+                    <label>現場名</label>
                     <select class="form-control site-select" name="site[]" required onchange="updateAvailableSites()">
                         <option value="" disabled selected>選択してください</option>
                         @foreach ($works as $work)
@@ -84,10 +84,10 @@
 
 
                     <label>開始時間</label>
-                    <input type="time" class="form-control start-time" name="start_time[]" value="08:00" required>
+                    <input type="time" class="form-control start-time" name="start_time[]" value="08:00" step="900" required>
                     <br>
                     <label>終了時間</label>
-                    <input type="time" class="form-control end-time" name="end_time[]" value="17:00" required>
+                    <input type="time" class="form-control end-time" name="end_time[]" value="17:00" step="900" required>
                     <br>
 
                     <button type="button" class="btn btn-success add-site">+</button>
@@ -141,42 +141,63 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // + ボタンの処理
     document.querySelector(".add-site").addEventListener("click", function () {
-        const lastEndTime = getLastEndTime(); // 最後の終了時間を取得
+    const lastEndTime = getLastEndTime(); // 最後の終了時間を取得
 
-        if (siteContainer.children.length < maxSites) {
-            let newSite = siteContainer.children[0].cloneNode(true);
+    if (siteContainer.children.length < maxSites) {
+        let newSite = siteContainer.children[0].cloneNode(true);
 
-            // 新しい項目に開始時間を設定
-            newSite.querySelector(".start-time").value = lastEndTime;
+        // ======= 開始時間（編集不可＆hiddenで送信） =======
+        let startInput = newSite.querySelector(".start-time");
 
-            // 新しい項目に終了時間をリセット
-            newSite.querySelector(".end-time").value = "17:00";
+        // 値を更新
+        startInput.value = lastEndTime;
 
-            // クローンにはプラスボタンを付けない
-            let addButton = newSite.querySelector(".add-site");
-            if (addButton) {
-                addButton.remove();
-            }
+        // span 表示用作成
+        const span = document.createElement("span");
+        span.className = "start-time-display";
+        span.textContent = lastEndTime;
 
-            // マイナスボタンを追加
-            let minusButton = document.createElement("button");
-            minusButton.type = "button";
-            minusButton.className = "btn btn-danger remove-site";
-            minusButton.textContent = "−";
-            minusButton.addEventListener("click", function () {
-                this.parentNode.remove();
-                updateAvailableSites();
-            });
+        // hidden input に変える
+        const hiddenInput = document.createElement("input");
+        hiddenInput.type = "hidden";
+        hiddenInput.name = "start_time[]";
+        hiddenInput.value = lastEndTime;
 
-            newSite.appendChild(minusButton);
-            siteContainer.appendChild(newSite);
+        // DOM に追加
+        startInput.parentNode.insertBefore(span, startInput);       // 表示だけ
+        startInput.parentNode.insertBefore(hiddenInput, startInput); // 送信用 hidden
+        startInput.remove(); // 元の input を削除
+        // =============================================
 
-            // 現在追加された終了時間を基に次の項目の開始時間を更新
-            updateStartTimes();
+        // 終了時間はリセット
+        newSite.querySelector(".end-time").value = "17:00";
 
-            updateAvailableSites();
+        // プラスボタン削除
+        let addButton = newSite.querySelector(".add-site");
+        if (addButton) {
+            addButton.remove();
         }
-    });
+
+        // マイナスボタン追加
+        let minusButton = document.createElement("button");
+        minusButton.type = "button";
+        minusButton.className = "btn btn-danger remove-site";
+        minusButton.textContent = "−";
+        minusButton.addEventListener("click", function () {
+            this.parentNode.remove();
+            updateAvailableSites();
+        });
+
+        newSite.appendChild(minusButton);
+        siteContainer.appendChild(newSite);
+
+        // 次の開始時間の更新（※任意）
+        updateStartTimes();
+
+        updateAvailableSites();
+    }
+});
+
 
     // 最後の終了時間を取得する関数
     function getLastEndTime() {
