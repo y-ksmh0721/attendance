@@ -17,6 +17,7 @@
         <!-- 送信ボタン -->
         <button type="submit" class="btn btn-primary">記録する</button>
     </form>
+    <button><a href="{{route('works.index')}}">現場登録</a></button>
 
     <h2 class="mb-4">客先リスト</h2>
     <table class="table table-bordered">

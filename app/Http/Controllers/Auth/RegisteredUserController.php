@@ -31,13 +31,18 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'company' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => ['required'],
         ]);
-        // dd($request->role);
+
+        $company = $request->company === 'null' ? $request->name : $request->company;
+
+
         $user = User::create([
             'name' => $request->name,
+            'company' => $company,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'permission' => $request->role,

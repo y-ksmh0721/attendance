@@ -26,7 +26,7 @@
                     <td>{{ $attendance->date }}</td>
                     <td>{{ $attendance->work->cliant->cliant_name }}<br>{{ $attendance->work->name }}</td>
                     <td>
-                        {{$attendance->craft->company->name}}<br>{{ $attendance->name }}</td>
+                        {{$attendance->company}}<br>{{ $attendance->name }}</td>
                     <td>
                         {{ $attendance->work_type }} / {{ $attendance->time_type }}<br>
                         {{ \Carbon\Carbon::parse($attendance->start_time)->format('H:i') }}

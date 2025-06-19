@@ -19,12 +19,16 @@
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>
-                    @if($user->permission === 2)
+                    @if($user->permission === 0)
                         全権限
                     @elseif($user->permission === 1)
                         一部権限
-                    @elseif($user->permission === 0)
+                    @elseif($user->permission === 2)
                         権限なし
+                    @elseif($user->permission === 3)
+                        常用
+                    @elseif($user->permission === 4)
+                        外注
                     @endif
                 </td>
                 <td>{{ $user->is_allowed ? '許可' : '拒否' }}</td>

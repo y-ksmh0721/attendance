@@ -16,7 +16,7 @@
         <input type="text" name="keyword" class="form-control" id="keyword" value="{{ old('keyword', request()->get('keyword')) }}" placeholder="名前や現場名を入力">
         <button type="submit" class="btn btn-primary">検索</button>
         <button><a href="{{route('attendance.list')}}">解除</a></button>
-        @if(in_array($user['permission'], [2]))
+        @if(in_array($user['permission'], [0]))
         <button><a href="{{route('csv.index')}}">CSVダウンロード</a></button>
         @endif
     </form>
@@ -28,7 +28,7 @@
             <th>時間</th>
             <th>残業</th>
             <th>作業時間</th>
-            @if(in_array($user['permission'], [2]))
+            @if(in_array($user['permission'], [0]))
             <th>人役</th>
             <th>残業編集</th>
             <th>種別</th>
@@ -42,8 +42,8 @@
             {{-- {{dd($attendance->work->cliant->cliant_name)}} --}}
             <td>{{ $attendance->date }}</td>{{-- 日付 --}}
 
-            <td><div class="bold">{{ $attendance->work->cliant->cliant_name }}</div>{{ $attendance->work->name }}</td>{{-- 現場名 --}}
-            <td>{{ $attendance->name }}</td>{{-- 作業者名 --}}
+            <td><div class="bold">{{ $attendance->cliant }}</div>{{ $attendance->site }}</td>{{-- 現場名 --}}
+            <td>{{ $attendance->name }} / {{$attendance->count}}人</td>{{-- 作業者名 --}}
             <td>
                 {{ $attendance->time_type}}<br>
                 {{ \Carbon\Carbon::parse($attendance->start_time)->format('H:i') }}
@@ -56,7 +56,7 @@
             <td>
                 {{substr($attendance->work_time, 0, 3)}}
             </td>
-            @if(in_array($user['permission'], [2]))
+            @if(in_array($user['permission'], [0]))
             <td>
                 {{$attendance->human_role}}
             </td>
@@ -138,7 +138,7 @@
                         {{ substr($attendance->overtime, 0, 5) }}
                     </span>
                 </div>
-                @if(in_array($user['permission'], [2]))
+                @if(in_array($user['permission'], [0]))
                     <div class="attendance-actions">
                         <form action="{{ route('attendance.toggleOvertime', $attendance->id) }}" method="POST">
                             @csrf

@@ -6,20 +6,21 @@
     <div class="short-table">
         <table>
             <tr>
-                <th>人事管理</th>
-                <th>現場管理</th>
+                <th>管理項目</th>
+                <th>リンク</th>
             </tr>
             <tr>
-                <td><a href="{{route('company.list')}}">所属登録</a></td>
+                <td>客先名を登録</td>
                 <td><a href="{{route('cliant.list')}}">客先登録</a></td>
             </tr>
             <tr>
-                <td><a href="{{route('craft.index')}}">作業員登録</a></td>
+                <td>現場名を登録</td>
                 <td><a href="{{route('works.index')}}">現場登録</a></td>
             </tr>
             <tr>
+                <td>ログインを認証
+                </td>
                 <td><a href="{{route('user.list')}}">ログイン管理</a></td>
-                <td></td>
             </tr>
         </table>
     </div>

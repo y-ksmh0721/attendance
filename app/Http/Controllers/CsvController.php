@@ -37,11 +37,11 @@ class CsvController extends Controller
 
         // 会社ごとにデータをグループ化（自社以外）
         $groupedAttendances = $attendances
-            ->reject(fn($att) => $att->craft->company->name == "Y's tec")
-            ->groupBy(fn($att) => $att->date . '_' . $att->work->name . '_' . $att->craft->company->name);
+
+            // ->reject(fn($att) => $att->craft->company->name == "Y's tec")
+            ->groupBy(fn($att) => $att->date . '_' . $att->site . '_' . $att->name);
 
         foreach ($attendances as $attendance) {
-            if ($attendance->craft->company->name == "Y's tec") {
                 $csvData[] = [
                     $attendance->date,
                     $attendance->work->cliant->cliant_name,
@@ -49,30 +49,29 @@ class CsvController extends Controller
                     $attendance->name,
                     $attendance->time_type,
                     $attendance->work_type,
-                    $attendance->time_type === '半日' ? '0.5' : '1',
+                    $attendance->count,
                     $attendance->overtime,
                     $attendance->work_content,
                     $attendance->human_role,
                 ];
-            }
         }
 
-        foreach ($groupedAttendances as $key => $records) {
-            $firstRecord = $records->first();
-            $companyName = $firstRecord->craft->company->name;
-            $csvData[] = [
-                $firstRecord->date,
-                $firstRecord->work->cliant->cliant_name,
-                $firstRecord->work->name,
-                $companyName,
-                $firstRecord->time_type,
-                $firstRecord->work_type,
-                $records->count(),
-                $records->sum('overtime'),
-                $firstRecord->work_content,
-                $records->sum('human_role'),
-            ];
-        }
+        // foreach ($groupedAttendances as $key => $records) {
+        //     $firstRecord = $records->first();
+        //     $companyName = $firstRecord->craft->company->name;
+        //     $csvData[] = [
+        //         $firstRecord->date,
+        //         $firstRecord->work->cliant->cliant_name,
+        //         $firstRecord->work->name,
+        //         $companyName,
+        //         $firstRecord->time_type,
+        //         $firstRecord->work_type,
+        //         $records->count(),
+        //         $records->sum('overtime'),
+        //         $firstRecord->work_content,
+        //         $records->sum('human_role'),
+        //     ];
+        // }
 
         $filename = "attendance_{$targetDate}.csv";
         ob_start();

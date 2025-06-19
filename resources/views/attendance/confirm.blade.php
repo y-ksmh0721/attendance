@@ -12,7 +12,8 @@
         <input type="hidden" name="user_id" value="{{$user->id}}">
         <input type="hidden" name="work_type" value="{{ $attendance['work_type'] }}">
         <input type="hidden" name="date" value="{{ $attendance['date'] }}">
-        <input type="hidden" name="name" value="{{ $attendance['name'] }}">
+        <input type="hidden" name="name" value="{{ $human['name'] }}">
+        <input type="hidden" name="count" value="{{ $attendance['count'] }}">
         @foreach($attendance['other_work_content'] as $otherWorkContent)
         <input type="hidden" name="other_work_content[]" value="{{ $otherWorkContent}}">
         @endforeach
@@ -23,7 +24,7 @@
             </tr>
             <tr>
                 <th>名前</th>
-                <td>{{ $attendance['name']}}</td>
+                <td>{{ $human['name']}}</td>
             </tr>
             <tr>
                 <th>科目</th>

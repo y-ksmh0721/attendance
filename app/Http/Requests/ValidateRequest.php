@@ -25,7 +25,7 @@ class ValidateRequest extends FormRequest
         return [
             'date' => 'required', //日付
             'work_type' => 'required', //日付
-            'name' => 'required',
+            'user_id' => 'required',
             'site' => 'required',
             'end_time' => 'required'
         ];

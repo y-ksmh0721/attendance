@@ -6,12 +6,12 @@
     {{-- ここからbody --}}
     <div class="container">
         <div class="surf-box">
-            @if(in_array($user['permission'], [1, 2]))
+            @if(in_array($user['permission'], [0, 1]))
                 <a href="{{ route('attendance.list') }}">出勤一覧</a>
-                <a href="{{ route('craft.index') }}">作業員操作</a>
+                <a href="{{ route('user.list') }}">ログイン管理</a>
             @endif
 
-            @if(in_array($user['permission'], [2]))
+            @if(in_array($user['permission'], [0]))
                 <a href="{{ route('management.management') }}">情報登録</a>
             @endif
         </div>
@@ -35,19 +35,40 @@
                 <input type="date" class="form-control" id="date" name="date" value="{{ old('date', date('Y-m-d')) }}" required>
             </div>
             <!-- 職人名 -->
-            <div class="mb-3">
-                <label for="name" class="form-label">名前</label>
-                <select class="form-control" id="name" name="name" required>
-                    <option value="" disabled {{ old('name') == '' ? 'selected' : '' }}>選択してください</option>
-                    @foreach ($crafts as $craft)
-                    @if ($craft->status === 'active')
-                    <option value="{{ $craft->name }}" {{old('name') ==$craft->name ? 'selected' : '' }}>
-                        {{ $craft->name }}</option>
-                        @endif
+            @if(in_array($user['permission'], [0]))
+                <div class="mb-3">
+                    <label for="name" class="form-label">名前</label>
+                    <select class="form-control" id="user_id" name="user_id" required>
+                        <option value="" disabled {{ old('name') == '' ? 'selected' : '' }}>選択してください</option>
+                        @foreach ($allUser as $userItem)
+                            @if ($userItem->is_allowed)
+                                <option value="{{ $userItem->id }}" {{ old('name') == $userItem->id ? 'selected' : '' }}>
+                                    {{ $userItem->name }}
+                                </option>
+                            @endif
                         @endforeach
                     </select>
                 </div>
+            @else
+                <input type="hidden" name='user_id' value='{{$user->id}}'>
+                <label style="font-weight: bold;">{{$user->name}}</label><br>
+            @endif
                 {{-- 労務・外注 --}}
+                @if(in_array($user['permission'], [0]))
+                人数：
+                <select name="count">
+                    @for ($i = 1; $i <= 20; $i++)
+                    <option value="{{ $i }}">{{ $i }}</option>
+                    @endfor
+                </select>
+                人<br>
+                <label>
+                    <input type="checkbox" name="work_type" value="労務" onclick="toggleCheckbox(this)"> 労務
+                </label>
+                <label>
+                    <input type="checkbox" name="work_type" value="外注" onclick="toggleCheckbox(this)"> 外注
+                </label>
+                @elseif(in_array($user['permission'], [1,2]))
                 <label>
                     <input type="checkbox" name="work_type" value="労務" onclick="toggleCheckbox(this)"> 労務
                 </label>
@@ -57,6 +78,25 @@
                 <br>
                 <label style="font-size:15px;color:red;font-weight:bold;">”時間”は30分刻みで入力してください</label>
                 <br>
+                <input type="hidden" name="count" value="1">
+                 @else
+                人数：
+                <select name="count">
+                    @for ($i = 1; $i <= 20; $i++)
+                    <option value="{{ $i }}">{{ $i }}</option>
+                    @endfor
+                </select>
+                人
+                <br>
+                <label>
+                    <input type="checkbox" name="work_type" value="労務" onclick="toggleCheckbox(this)"> 労務
+                </label>
+                <label>
+                    <input type="checkbox" name="work_type" value="外注" onclick="toggleCheckbox(this)"> 外注
+                </label>
+                <br>
+                <label style="font-size:15px;color:red;font-weight:bold;">”時間”は30分刻みで入力してください</label>
+                 @endif
             <!-- 今日の現場（複数追加対応） -->
             <div id="site-container">
                 <div class="site-group">

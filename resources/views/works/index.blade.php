@@ -29,6 +29,7 @@
                                 </option>
                             @endforeach
                         </select>
+                        <button><a href="{{route('cliant.list')}}">客先登録</a></button>
                     </td>
                     <td>
                         <input type="text" class="form-control" id="site_name" name="site_name" value="{{ old('site_name') }}" required>

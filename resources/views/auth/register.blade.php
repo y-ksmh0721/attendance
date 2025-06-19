@@ -9,6 +9,15 @@
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
+        <!-- 社員（会社名を送る） -->
+        <label>
+            <input type="radio" name="company" value="Y's tec"> 社員
+        </label>
+        <label>
+            <input type="radio" name="company" value="null"> 下請け
+        </label>
+
+
         <!-- Email Address -->
         <div class="mt-4">
             <x-input-label for="email" :value="__('Email')" />
@@ -42,16 +51,24 @@
         <div class="mt-4">
             <div class="mt-1">
                 <label>
-                    <input type="radio" name="role" value="0" {{ old('role') == '2' ? 'checked' : '' }}>
-                    権限なし
+                    <input type="radio" name="role" value="0" {{ old('role') == '0' ? 'checked' : '' }}>
+                    全権限あり
                 </label><br>
                 <label>
                     <input type="radio" name="role" value="1" {{ old('role') == '1' ? 'checked' : '' }}>
                     一部権限あり
                 </label><br>
                 <label>
-                    <input type="radio" name="role" value="2" {{ old('role', '2') == '0' ? 'checked' : '' }}>
-                    全権限あり
+                    <input type="radio" name="role" value="2" {{ old('role') == '2' ? 'checked' : '' }}>
+                    権限なし
+                </label><br>
+                <label>
+                    <input type="radio" name="role" value="3" {{ old('role') == '3' ? 'checked' : '' }}>
+                    常用
+                </label><br>
+                <label>
+                    <input type="radio" name="role" value="4" {{ old('role') == '4' ? 'checked' : '' }}>
+                    外注
                 </label>
             </div>
         </div>

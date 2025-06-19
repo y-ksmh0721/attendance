@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Attendance;
 use Carbon\Carbon;
 use App\Models\Work;
+use App\Models\Cliant;
+use App\Models\User;
 use App\Http\Requests\ValidateRequest;
 use App\Http\Requests\AttendanceRequest;
 
@@ -17,15 +19,20 @@ class AttendanceController extends Controller
         $user = $request->user();
         // $attendance = (object) $request->all();
         $attendance = $request->all();
-
+        $human = User::find($attendance['user_id']);
+        // dd($human);
         return view('attendance.confirm',[
             'attendance' => $attendance,
             'user' => $user,
+            'human' => $human,
         ]);
     }
 
     public function complete(Request $request){
         $attendance = $request->all();
+
+        $companyInfo = User::where('name', $attendance['name'])->first();
+
         $date = $request->date;
         foreach ($request->start_time as $index => $startStr) {
             $startTime = Carbon::parse($startStr); // この時点で $index は定義されている！
@@ -89,6 +96,11 @@ class AttendanceController extends Controller
         // 配列の数だけループ
         foreach ($siteIds as $index => $site) {
 
+            $siteItem = Work::find($site);
+            $siteName = $siteItem->name;
+            $cliant_name = $siteItem->cliant->cliant_name;
+
+
             //作業開始と終了の時間を取得
             $start = Carbon::parse($startTimes[$index]);
             $end = Carbon::parse($endTimes[$index]);
@@ -111,8 +123,15 @@ class AttendanceController extends Controller
             // 追加：17:00で作業終了とする制限時間を定義
             $endLimit = Carbon::parse($start->format('Y-m-d') . ' 17:00');
 
-            // 作業終了時間を17時以降なら17時に制限
-            $adjustedEnd = $end->greaterThan($endLimit) ? $endLimit : $end;
+            // 勤務区分によって終了時刻の調整方法を変える
+            if ($start >= $eightAM && $start < $eightPM) {
+                // 日勤・残業：17時までに制限
+                $adjustedEnd = $end->greaterThan($endLimit) ? $endLimit : $end;
+            } else {
+                // 夜勤など：制限せずそのまま
+                $adjustedEnd = $end;
+            }
+
 
             //総作業時間（分単位）
             $workMinutes = $start->diffInMinutes($adjustedEnd);
@@ -132,6 +151,10 @@ class AttendanceController extends Controller
             //人役（作業時間 × 0.125）
             $humanRole = round($workTime*0.125,4);
             // dd($humanRole);
+            // もし登録現場が1つで、作業時間が5時間以上なら人役は1にする
+            if (count($siteIds) === 1 && $workTime >= 5) {
+                $humanRole = 1.0;
+            }
 
             //残業時間
             // 通常残業（17:00以降）
@@ -164,6 +187,8 @@ class AttendanceController extends Controller
                 $timeType = '不明';
             }
 
+
+
             // 「作業内容」が「その他」の場合、テキストボックスの値を優先
                 $workContent = ($workContents[$index] == 'その他' && isset($otherWorkContents[$index]))
                     ? $otherWorkContents[$index]
@@ -173,12 +198,18 @@ class AttendanceController extends Controller
                 $workType = ($attendance['work_type'] == '労務') ? '請負' : '外注';
 
 
+                // dd($attendance['count']);
+
             // 出勤データを作成
             $newAtt = new Attendance();
-            $newAtt->name = $attendance['name'];  //名前ok
+            $newAtt->name = $attendance['name'];  //名前
+            $newAtt->company = $companyInfo->company; //所属
             $newAtt->work_type = $workType;       //種別ok
             $newAtt->date = $attendance['date'];  //日付ok
-            $newAtt->site_id = $site;               //現場ok
+            $newAtt->count = $attendance['count'];
+            $newAtt->site_id = $site;             //現場ok
+            $newAtt->site = $siteName;             //現場名ok
+            $newAtt->cliant = $cliant_name;             //クライアント名ok
             $newAtt->work_content = $workContent;//作業内容ok
             $newAtt->start_time = $startTimes[$index]; //開始時間ok
             $newAtt->end_time = $endTimes[$index]; //終了時間ok
