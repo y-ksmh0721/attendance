@@ -231,7 +231,7 @@ class AttendanceController extends Controller
 
         //リレーションにて結合したcraftとcompanyをattendanceテーブルと一緒に持ってくる
         $attendances = Attendance::with(['craft.company','work.cliant'])
-                                    ->orderby('date','desc')
+                                    ->orderby('created_at','desc')
                                     ->orderby('name','asc');
 
         // フォームで送られてきた値を取得

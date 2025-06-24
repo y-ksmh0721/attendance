@@ -38,7 +38,12 @@
         </tr>
         {{-- {{dd($attendances)}} --}}
         @foreach($attendances as $attendance)
-        <tr>
+            @php
+        // 登録日(created_at)と出勤日(date)の比較
+        $createdDate = \Carbon\Carbon::parse($attendance->created_at)->format('Y-m-d');
+        $isMismatch = $createdDate !== $attendance->date;
+         @endphp
+         <tr @if($isMismatch) style="background-color: red;" @endif>
             {{-- {{dd($attendance->work->cliant->cliant_name)}} --}}
             <td>{{ $attendance->date }}</td>{{-- 日付 --}}
 
@@ -126,10 +131,10 @@
                     <span class="label">{{ $attendance->date }} / {{ $attendance->name }}</span>
                 </div>
                 <div class="attendance-detail">
-                    <span class="label">{{ $attendance->work->cliant->cliant_name }}</span>
+                    <span class="label">{{ $attendance->cliant }}</span>
                 </div>
                 <div class="attendance-detail">
-                    <span class="label">{{ $attendance->work->name }}</span>
+                    <span class="label">{{ $attendance->site }}</span>
                 </div>
                 <div class="attendance-detail">
                     <span class="label">

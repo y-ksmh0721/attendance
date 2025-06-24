@@ -138,7 +138,26 @@
             <button type="submit" class="btn btn-primary">記録</button>
         </form>
     </div>
+@if(in_array($user['permission'], [0]))
+    <h4>未提出</h2>
+    @foreach ($allUser as $userItem)
+    @if ($userItem->is_allowed)
+        @php
+            $alreadyCheckedIn = \App\Models\Attendance::where('name', $userItem->name)
+                                ->where('date', \Carbon\Carbon::today()->format('Y-m-d'))
+                                ->exists();
+        @endphp
+
+        @if (!$alreadyCheckedIn)
+            {{ $userItem->name }}<br>
+        @endif
+    @endif
+    @endforeach
+@endif
+<br>
+<br>
     <a href="#" id="logout-link">ログアウト</a>
+
 
 <script>
 document.getElementById("logout-link").addEventListener("click", function (e) {

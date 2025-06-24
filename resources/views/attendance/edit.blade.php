@@ -57,13 +57,13 @@
                 </tr>
                 <tr>
                     <td>現場名</td>
-                    <td>{{$attendance->work->name}}</td>
+                    <td>{{$attendance->site}}</td>
                     <td>
                         <select class="form-control" id="morning_site" name="site" required>
                             <option value="" disabled {{ old('site') == '' ? 'selected' : '' }}>選択してください</option>
                             @foreach ($works as $work)
                                 @if ($work->status === 'active')
-                                    <option value="{{ $work->name }}" {{ old('site', $attendance->work->name) == $work->name ? 'selected' : '' }}>
+                                    <option value="{{ $work->name }}" {{ old('site', $attendance->site) == $work->name ? 'selected' : '' }}>
                                         {{ $work->name }}
                                     </option>
                                 @endif

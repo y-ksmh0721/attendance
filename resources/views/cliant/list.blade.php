@@ -25,7 +25,7 @@
             <tr>
                 <th>客先名</th>
                 <th>編集</th>
-                <th>削除</th>
+                {{-- <th>削除</th> --}}
             </tr>
         </thead>
         <tbody>
@@ -33,7 +33,7 @@
             <tr>
                 <td>{{ $cliant['cliant_name'] }}</td>
                 <td><a href="{{route('cliant.edit',['id' => $cliant['id']])}}">編集</a></td>
-                <td>
+                {{-- <td>
                     <form action="{{ route('cliant.destroy', ['id' => $cliant['id']]) }}" method="POST">
                         @csrf
                         @method('DELETE')
@@ -41,7 +41,7 @@
                             削除する
                         </button>
                     </form>
-                </td>
+                </td> --}}
             </tr>
             @endforeach
         </tbody>

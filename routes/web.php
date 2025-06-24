@@ -95,6 +95,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/user', [UserController::class, 'list'])->name('user.list');
     Route::post('/user/toggle/{user}', [UserController::class, 'toggle'])->name('user.toggle');
+    Route::get('/user/edit{id}', [UserController::class, 'edit'])->name('user.edit');
+    Route::post('/user/update/{id}', [UserController::class, 'update'])->name('user.update');
 });
 
 
