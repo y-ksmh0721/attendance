@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', '出勤管理')</title>
-    {{-- 開発用 --}}
+    {{-- 開発用（いらないかも） --}}
     {{-- @vite(['resources/css/style.css', 'resources/js/app.js']) --}}
     {{-- 本番用 --}}
-    {{-- <link rel="stylesheet" href="{{ asset('build/assets/app-CSIfVw45.css') }}">
-    <link rel="stylesheet" href="{{ asset('build/assets/style-C717Te9p.css') }}">
-    <script src="{{ asset('build/assets/app-CIfNNPVJ.js') }}" defer></script> --}}
-@if (app()->environment('local'))
+    <link rel="stylesheet" href="{{ asset('build/assets/app-CSIfVw45.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/assets/style-sIrnz_Ww.css') }}">
+    <script src="{{ asset('build/assets/app-D-SzzJQe.js') }}" defer></script>
+    {{-- 開発用 --}}
+{{-- @if (app()->environment('local'))
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     @vite(['resources/js/app.js'])
 @else
@@ -18,7 +19,7 @@
     <link rel="stylesheet" href="{{ asset('build/assets/app-CSIfVw45.css') }}">
     <link rel="stylesheet" href="{{ asset('build/assets/style-sIrnz_Ww.css') }}">
     <script src="{{ asset('build/assets/app-D-SzzJQe.js') }}" defer></script>
-@endif
+@endif --}}
 </head>
 <body>
     <header>
