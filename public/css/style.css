@@ -1,10 +1,10 @@
+/* 本番環境CSS */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
     background-color: #f8f9fa;
     margin: 0;
     padding: 0;
-    background:red!important;
 }
 
 header {
